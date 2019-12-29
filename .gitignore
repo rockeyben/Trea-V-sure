@@ -1,3 +1,7 @@
 data.xlsx
 data_*.csv
 !.gitignore
+*/.DS_Store
+*/.DS_Store?
+.DS_Store
+.DS_Store?
