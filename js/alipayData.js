@@ -18,6 +18,7 @@ function alipayData(filepath, user, charset){
             predata.forEach((d,i)=>{
                 d[ks[k]]=d[ks[k]].trim();
                 d.user = user;
+                d.dataSource = "alipay";
             })
         }
         return predata;
