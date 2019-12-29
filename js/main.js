@@ -9,5 +9,5 @@ var NUMBER_OF_COLORS = 6;
 
 
 data = randomData();
-console.log(data.dates);
+//console.log(data.dates);
 createHeatMap(data, 2015, 2016);

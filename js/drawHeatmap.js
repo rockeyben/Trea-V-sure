@@ -1,6 +1,6 @@
 function createHeatMap(data, startYear, endYear) {
-    var width = 1100;
-    var height = 200;
+    var width = $(".results").width();
+    var height = CELL_SIZE * 7;
     var dx = 35;
     var gridClass = 'js-date-grid day';
     var formatColor = d3.scaleQuantize().domain([0, data.maxCount]).range(d3.range(NUMBER_OF_COLORS).map((d) => `color${d}`));
@@ -24,6 +24,7 @@ function createHeatMap(data, startYear, endYear) {
     rect.append('text')
         .attr('transform', `translate(-9,${CELL_SIZE * 3.5})rotate(-90)`)
         .style('text-anchor', 'middle')
+        .attr('class', 'text-year')
         .text((d) => d);
 
     rect.selectAll('.day')
@@ -65,14 +66,15 @@ function createHeatMap(data, startYear, endYear) {
         .enter()
         .append('svg')
         .attr('width', width)
-        .attr('height', 20)
+        .attr('height', 40)
         .append('g')
-        .attr('transform', 'translate(0,10)')
+        .attr('transform', 'translate(0,20)')
         .selectAll('.month')
         .data(() => d3.range(12))
         .enter()
         .append('text')
         .attr('x', (d) => d * (4.5 * CELL_SIZE) + dx)
+        .attr('class', 'text-month')
         .text((d) => d3.timeFormat('%b')(new Date(0, d + 1, 0)));
 
     // Render the grid color legend.
@@ -85,7 +87,7 @@ function createHeatMap(data, startYear, endYear) {
         .attr('width', width)
         .attr('height', 20)
         .append('g')
-        .attr('transform', 'translate(644,0)')
+        .attr('transform', 'translate(0,0)')
         .selectAll('.legend-grid')
         .data(() => d3.range(7))
         .enter()

@@ -57,7 +57,6 @@ body {
   height: 20px;
 }
 
-
 #headline{
     text-align: center;
     margin-top: 1em;
@@ -68,4 +67,19 @@ body {
     margin-left:20%;
     margin-right:20%;
     font-style: italic;
+}
+
+.js-heatmap{
+
+}
+
+.text-month{
+  font-size: 18px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.text-year{
+  font-size: 25px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
 }
