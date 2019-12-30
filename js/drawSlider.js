@@ -27,7 +27,7 @@ function drawSlider(start_year, end_year){
     var gTime = d3
         .select('div#slider-time')
         .append('svg')
-        .attr('width', 800)
+        .attr('width', 1000)
         .attr('height', 100)
         .append('g')
         .attr('transform', 'translate(80,30)');

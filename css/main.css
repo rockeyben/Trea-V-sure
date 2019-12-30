@@ -48,10 +48,6 @@ body {
 .color4-4 { fill: rgb(217, 95, 14)}
 .color4-5 { fill: rgb(153, 52, 4)}
 
-
-
-
-
 .hidden { display: none; }
 
 .custom-title { margin-top: 200px; }
@@ -123,7 +119,7 @@ body {
 
 #category-selecter{
   display: block;
-  width: 500px;
-    margin-right: auto;
+    margin-right: 20px;
     margin-left: auto;
+    margin-bottom: 20px;
 }
