@@ -13,12 +13,44 @@ body {
   stroke-width: 3px;
 }
 
-.color0 { fill: #d6e685 }
-.color1 { fill: #44a340 }
-.color2 { fill: #28752d }
-.color3 { fill: #1e6823 }
-.color4 { fill: #365e2f }
-.color5 { fill: #144e12 }
+.color0-0 { fill: #d6e685 }
+.color0-1 { fill: #44a340 }
+.color0-2 { fill: #28752d }
+.color0-3 { fill: #1e6823 }
+.color0-4 { fill: #365e2f }
+.color0-5 { fill: #144e12 }
+
+.color1-0 { fill: rgb(254, 229, 217)}
+.color1-1 { fill: rgb(252, 187, 161)}
+.color1-2 { fill: rgb(252, 146, 114)}
+.color1-3 { fill: rgb(251, 106, 74)}
+.color1-4 { fill: rgb(222, 45, 38)}
+.color1-5 { fill: rgb(165, 15, 21)}
+
+.color2-0 { fill: rgb(255, 255, 204)}
+.color2-1 { fill: rgb(199, 233, 180)}
+.color2-2 { fill: rgb(127, 205, 187)}
+.color2-3 { fill: rgb(65, 182, 196)}
+.color2-4 { fill: rgb(44, 127, 184)}
+.color2-5 { fill: rgb(37, 52, 148)}
+
+.color3-0 { fill: rgb(237, 248, 251)}
+.color3-1 { fill: rgb(191, 211, 230)}
+.color3-2 { fill: rgb(158, 188, 218)}
+.color3-3 { fill: rgb(140, 150, 198)}
+.color3-4 { fill: rgb(136, 86, 167)}
+.color3-5 { fill: rgb(129, 15, 124)}
+
+.color4-0 { fill: rgb(255, 255, 212)}
+.color4-1 { fill: rgb(254, 227, 145)}
+.color4-2 { fill: rgb(254, 196, 79)}
+.color4-3 { fill: rgb(254, 153, 41)}
+.color4-4 { fill: rgb(217, 95, 14)}
+.color4-5 { fill: rgb(153, 52, 4)}
+
+
+
+
 
 .hidden { display: none; }
 
@@ -31,10 +63,9 @@ body {
   margin: 0 auto;
 }
 
-.results {
+#results {
   width: 1100px;
   display: block;
-  margin-top: 100px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -69,8 +100,9 @@ body {
     font-style: italic;
 }
 
-.js-heatmap{
-
+#slider{
+    text-align: center;
+    margin-top: 1em;
 }
 
 .text-month{
@@ -82,4 +114,16 @@ body {
   font-size: 25px;
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
+}
+
+.text-category{
+    font-size: 35px;
+    fill:#fff;
+}
+
+#category-selecter{
+  display: block;
+  width: 500px;
+    margin-right: auto;
+    margin-left: auto;
 }
