@@ -1,6 +1,8 @@
 function createHeatMap(data, startYear, endYear) {
-    var width = $("#results").width();
+    // var width = $(".results").width();
+    var width = CELL_SIZE * 56;
     var height = CELL_SIZE * 7;
+    var margin = {top: 10, right: 10, bottom: 10, left: 10};
     var dx = 35;
     var gridClass = 'js-date-grid day';
     var formatColor = d3.scaleQuantize()
@@ -14,8 +16,8 @@ function createHeatMap(data, startYear, endYear) {
         .data(d3.range(startYear, endYear))
         .enter()
         .append('svg')
-        .attr('width', width)
-        .attr('height', height)
+        .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
+                    +(height + margin.top + margin.bottom).toString()+"")
         .attr('class', 'color')
 
     // Add a grid for each day between the date range.
@@ -52,7 +54,7 @@ function createHeatMap(data, startYear, endYear) {
         .attr('date', (d) => d.date)
         // Add bootstrap's tooltip event listener.
         .call(() => $('[data-toggle="tooltip"]').tooltip({
-            container: 'body',
+            container: '#the-article',
             placement: 'top',
             position: { my: 'top' }
         }))
@@ -66,8 +68,8 @@ function createHeatMap(data, startYear, endYear) {
         .data([1])
         .enter()
         .append('svg')
-        .attr('width', width)
-        .attr('height', 40)
+        .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
+                    +(40 + margin.top + margin.bottom).toString()+"")
         .append('g')
         .attr('transform', 'translate(0,20)')
         .selectAll('.month')
@@ -85,8 +87,8 @@ function createHeatMap(data, startYear, endYear) {
         .data([1])
         .enter()
         .append('svg')
-        .attr('width', width)
-        .attr('height', 20)
+        .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
+                    +(20 + margin.top + margin.bottom).toString()+"")
         .append('g')
         .attr('transform', 'translate(0,0)')
         .selectAll('.legend-grid')
