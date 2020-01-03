@@ -4,16 +4,16 @@
 // 导入支付宝或微信数据
 
 function importData(filepath, user, platform, charset){
-    var user = arguments[1] ? arguments[1] : "user_defult";
-    var filenamestart = filepath.split("/").pop().slice(0,6);
-    var platform = arguments[2] ? arguments[2] : ( filenamestart=="alipay" ? "alipay" : ( filenamestart=="微信支付账单" ? "wechat" : "unknown" ) );
+    user = arguments[1] ? arguments[1] : "user_defult";
+    let filenamestart = filepath.split("/").pop().slice(0,6);
+    platform = arguments[2] ? arguments[2] : ( filenamestart=="alipay" ? "alipay" : ( filenamestart=="微信支付账单" ? "wechat" : "unknown" ) );
     if (platform=="unknown") {throw "importData() need 'platform'."};
-    var charset = arguments[3] ? arguments[3] : ( platform=="alipay" ? "GBK" : "utf-8" );
-    var tablehead_alipay = "tradeID,orderID,timeCreated,timePurchased,timeModified,tradeSource,tradeType,trader,goodName,value,dealType,stateTrade,serviceFee,valueRefund,note,stateCapital";
-    var tablehead_wechat = "timePurchased,tradeType,trader,goodName,dealType,value,dealMethod,stateTrade,tradeID,orderID,note";
-    var tablehead = platform=="alipay" ? tablehead_alipay : tablehead_wechat ;
-    var slice_start = platform=="alipay" ? 5 : 17 ;
-    var slice_end = platform=="alipay" ? -8 : -1 ;
+    charset = arguments[3] ? arguments[3] : ( platform=="alipay" ? "GBK" : "utf-8" );
+    let tablehead_alipay = "tradeID,orderID,timeCreated,timePurchased,timeModified,tradeSource,tradeType,trader,goodName,value,dealType,stateTrade,serviceFee,valueRefund,note,stateCapital";
+    let tablehead_wechat = "timePurchased,tradeType,trader,goodName,dealType,value,dealMethod,stateTrade,tradeID,orderID,note";
+    let tablehead = platform=="alipay" ? tablehead_alipay : tablehead_wechat ;
+    let slice_start = platform=="alipay" ? 5 : 17 ;
+    let slice_end = platform=="alipay" ? -8 : -1 ;
     return fetch(filepath)
     .then(response => response.arrayBuffer())
     .then(buffer => new TextDecoder(charset).decode(buffer))
@@ -23,7 +23,7 @@ function importData(filepath, user, platform, charset){
     .then(rawdata => d3.csvParse(rawdata))
     .then(predata => {
         ks = Object.keys(predata[0]);
-        for( var k in ks ){
+        for( let k in ks ){
             predata.forEach((d,i)=>{
                 d[ks[k]]=d[ks[k]].trim();
                 d.user = user;
@@ -48,7 +48,7 @@ async function addData(filepath, user, platform, charset){
     try {
         const data = await importData(filepath, user, platform, charset);
         filedatas.push(data);
-        onDataAdded(data);
+        onDataAdded(data);// 回调函数
     } catch (e) {
         console.log("some error happend in importData()");
         console.log(e);
