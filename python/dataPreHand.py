@@ -21,7 +21,7 @@ with open("../data_sch.csv", "r") as f:
             for (key,val) in zip(keys, x.split(",")):
                 tempDict[key] = val
             data.append(tempDict)
-            
+
 with open("../data_mx.csv", "r") as f:
     lineN = 0
     csvd = csv.reader(f)
@@ -46,7 +46,7 @@ goodFat = {}.fromkeys([x["交易对方"] for x in data]).keys()
 with open("../goodName.txt", "w") as f:
     for x in goodName:
         f.write(x+"\n")
-        
+
 with open("../tradName.txt", "w") as f:
     for x in goodFat:
         f.write(x+"\n")
