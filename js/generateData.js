@@ -9,17 +9,37 @@ function randomData(year) {
     for(c = 0; c < CATEGORY.length; c++){
         maxCount.push(0);
     }
+
     while (end_date > cur_date){
-        if (Math.random() < 0.6){
+        if (Math.random() < 1){
             date = format(cur_date);
             info = {};
             info['date'] = date;
             info['count'] = 0;
+            info['records'] = [];
+
             for (c = 1; c < CATEGORY.length; c++) {
-                info[CATEGORY[c]] = Math.ceil(Math.random() * 1000);
+                info[CATEGORY[c]] = 0;
+                for (t = 0; t < Math.floor(Math.random() * 10); t++) {
+                    var buy = 'Random shopping #' + Math.ceil(Math.random() * 1000);
+                    var seller = 'Jacky Chan #' + Math.ceil(Math.random() * 1000);
+                    //console.log(buy, seller)
+                    var expense = Math.ceil(Math.random() * 1000);
+                    
+                    info[CATEGORY[c]] += expense;
+                    //console.log(info[CATEGORY[c]]);
+                    info['records'].push({
+                        'name': buy,
+                        'expense': expense,
+                        'seller': seller,
+                        'category': c
+                    })
+                }
+                
                 info['count'] += info[CATEGORY[c]];
                 maxCount[c] = Math.max(maxCount[c], info[CATEGORY[c]]);
             }
+            //console.log(info['records'])
             maxCount[0] = Math.max(maxCount[0], info[CATEGORY[0]]);
             //console.log(info.count);
             dateTable.push(info);
