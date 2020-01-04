@@ -24,11 +24,12 @@ function drawSlider(start_year, end_year){
             }
         });
 
+    
     var gTime = d3
         .select('div#slider-time')
         .append('svg')
-        .attr('width', 1000)
-        .attr('height', 100)
+        .attr('width', $('.slider').width)
+        .attr('height', $('.slider').height)
         .append('g')
         .attr('transform', 'translate(80,30)');
 

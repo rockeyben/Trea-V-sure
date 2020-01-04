@@ -13,43 +13,60 @@
 </head>
 
 <body>
-    <div id="headline">
-        <h1>Trea-V-sure</h1>
-        <h3>专属的账单可视化</h3>
-    </div>
-    
-    <div id="slider">
-        <div class="col-sm-2">
-            <p id="value-time"></p>
+    <div id='top-part'>
+        <div id="headline">
+            <h1>Trea-V-sure</h1>
+            <h3>专属的账单可视化</h3>
         </div>
-        <div class="col-sm">
-            <div id="slider-time"></div>
+        
+        <div id="slider">
+            <div class="col-sm-2">
+                <p id="value-time"></p>
+            </div>
+            <div class="col-sm">
+                <div id="slider-time"></div>
+            </div>
         </div>
-    </div>
 
-    <div id='category-selecter'>
-        <div class="category-rect"> </div>
+        <div id='category-selecter'>
+            <div class="category-rect"> </div>
+        </div>
+
+        <div id='date-selecter'>
+            <div class="date-selecter-rect"> </div>
+        </div>
+
+        <div id='tip-trend'>
+        </div>
     </div>
 
     <div id="results">
         <div id="js-heatmap"></div>
         <div id="js-months"></div>
         <div id="js-legend"></div>
+        <div id="tooltip"></div>
     </div>
+
 
     <div class="circle-tree-graph">
     </div>
 
+    <div id="record-list">
+
+    </div>
+
     <script type="text/javascript" src="lib/d3.min.js"></script>
     <script type="text/javascript" src="lib/jquery.min.js"></script>
-    <script type="text/javascript" src="lib/d3.tip.js"></script>
     <script type="text/javascript" src="lib/d3-simple-slider.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
+    <script type="text/javascript" src="js/drawStackChart.js"></script>
     <script type="text/javascript" src="js/generateData.js"></script>
     <script type="text/javascript" src="js/drawHeatmap.js"></script>
     <script type="text/javascript" src="js/drawSlider.js"></script>
     <script type="text/javascript" src="js/drawCategorySelecter.js"></script>
+    <script type="text/javascript" src="js/drawRecordList.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 </body>
 

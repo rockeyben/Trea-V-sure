@@ -10,6 +10,7 @@ function createHeatMap(data, startYear, endYear) {
         .range(d3.range(NUMBER_OF_COLORS)
         .map((d) => `color${CURR_CLASS}-${d}`));
 
+
     var heatmapSvg = d3.select('#js-heatmap').selectAll('svg.heatmap')
         .enter()
         .append('svg')
@@ -20,10 +21,15 @@ function createHeatMap(data, startYear, endYear) {
                     +(height + margin.top + margin.bottom).toString()+"")
         .attr('class', 'color')
 
+    
     // Add a grid for each day between the date range.
     
     var rect = heatmapSvg.append('g')
         .attr('transform', `translate(${dx},0)`);
+
+    var div = d3.select('#tooltip').append("div")
+        .attr('class', 'd3-tip')
+        .style('opacity', 0);
 
     // Add year label.
     rect.append('text')
@@ -43,23 +49,52 @@ function createHeatMap(data, startYear, endYear) {
         .attr('height', CELL_SIZE)
         .attr('x', (d) => d3.timeFormat('%U')(new Date(d.date)) * CELL_SIZE)
         .attr('y', (d) => (new Date(d.date)).getDay() * CELL_SIZE)
-        .attr('data-toggle', 'tooltip')
-        // Add the grid data as a title attribute to render as a tooltip.
-        .attr('title', (d) => {
-            var date = d3.timeFormat('%b %d, %Y')(new Date(d.date));
-            if (!d || !d[CATEGORY[CURR_CLASS]]) return `No money on ${date}`;
-            else if (d[CATEGORY[CURR_CLASS]] === 1) return `spend 1 RMB on ${date}`;
-            else return `spend ${d[CATEGORY[CURR_CLASS]]} RMB on ${date}`;
-        })
         .attr('date', (d) => d.date)
-        // Add bootstrap's tooltip event listener.
-        .call(() => $('[data-toggle="tooltip"]').tooltip({
-            container: '#the-article',
-            placement: 'top',
-            position: { my: 'top' }
-        }))
         // Add the colors to the grids.
         .attr('class', (d) => `${gridClass} ${formatColor(d[CATEGORY[CURR_CLASS]])}`)
+        .on('click', function (d) {
+            console.log(IS_SELECTING)
+            if(IS_SELECTING == 1){
+                STACK_START_DATE = new Date(d.date);
+                IS_SELECTING += 1;
+                updateDateText1();
+            }
+            else if(IS_SELECTING == 2){
+                STACK_END_DATE = new Date(d.date);
+
+                if (STACK_START_DATE - STACK_END_DATE > 0){
+                    var tmp = STACK_END_DATE;
+                    STACK_END_DATE = STACK_START_DATE;
+                    STACK_START_DATE = tmp;
+                }
+                updateDateText1();
+                updateDateText2();
+                updateStackChart();
+                IS_SELECTING = 0;
+            }
+
+            CURR_DATE = new Date(d.date);
+            updateRecordList();
+        })
+        .on('mouseover', function (d) {
+            var timeFormat = d3.timeFormat('%Y-%m-%d');
+            //console.log(d.date)
+            div.transition()
+                .style('opacity', .9);
+            div.html("<span id='tooltip' style='color: black'>" + d.date + "</span></br></br>" +
+                "<span id='tooltip' style='color: black'>Total:" + d.count + "</span></br>" +
+                "<span id='tooltip' style='color: black'>Food:" + d.food + "</span></br>" +
+                "<span id='tooltip' style='color: black'>Clothes:" + d.clothes + "</span></br>" +
+                "<span id='tooltip' style='color: black'>Living:" + d.living + "</span></br>" +
+                "<span id='tooltip' style='color: black'>Transport:" + d.transport + "</span>"
+                ) 
+                .style('left', (d3.event.pageX+20)+'px')
+                .style('top', (d3.event.pageY+20)+'px')
+        })
+        .on("mouseout", function (d) {
+            div.style("opacity", 0.0);
+        }); 
+
 
     // Render x axis to show months
     d3.select('#js-months').selectAll('svg.months')
@@ -115,12 +150,6 @@ function updateHeatmap(data, startYear, endYear) {
     grid = d3.selectAll('.day').data(data.dates)
         .attr('x', (d) => d3.timeFormat('%U')(new Date(d.date)) * CELL_SIZE)
         .attr('y', (d) => (new Date(d.date)).getDay() * CELL_SIZE)
-        .attr('title', (d) => {
-            var date = d3.timeFormat('%b %d, %Y')(new Date(d.date));
-            if (!d || !d[CATEGORY[CURR_CLASS]]) return `No money on ${date}`;
-            else if (d[CATEGORY[CURR_CLASS]] === 1) return `spend 1 RMB on ${date}`;
-            else return `spend ${d[CATEGORY[CURR_CLASS]]} RMB on ${date}`;
-        })
         .attr('class', (d) => `${gridClass} ${formatColor(d[CATEGORY[CURR_CLASS]])}`);
 
     var legendSvg = d3.select('#js-legend')
