@@ -212,7 +212,7 @@ function catData(data) {
             if (!d.dealCat) {
                 d.dealCat = "其他收入";
                 d.dealCatSub = "其他收入";
-                console.log(`【${d.dealCatSub}】【${d.trader}】【${d.goodName}】【${d.value}】「${d.idx}」「${d.orderID}」「${d.stateTrade}」`);
+                // console.log(`【${d.dealCatSub}】【${d.trader}】【${d.goodName}】「${d.value}」`);
             }
         } else if (d.dealType == "支出") {
             let ks = zhichuks;
@@ -238,7 +238,7 @@ function catData(data) {
             if (!d.dealCat) {
                 d.dealCat = "其他支出";
                 d.dealCatSub = "其他支出";
-                console.log(`【${d.dealCatSub}】【${d.trader}】【${d.goodName}】【${d.value}】「${d.idx}」「${d.orderID}」「${d.stateTrade}」`);
+                // console.log(`【${d.dealCatSub}】【${d.trader}】【${d.goodName}】「${d.value}」`);
             }
         }
     })
