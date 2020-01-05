@@ -1,7 +1,6 @@
 
 // ============================================================================= //
 
-// 导入支付宝或微信数据
 // 数据结构说明：
 // 主要字段（也就是可视化里面可能要用到的字段）：
 // d.time               参考时间，用来在时间轴上定位，大部分是支付时间，少数是订单发生时间
@@ -9,6 +8,8 @@
 // d.trader             交易对方
 // d.goodName           商品名称
 // d.dealType           是收入还是支出
+// d.dealCat            主分类
+// d.dealCatSub         次分类
 // d.value              金额
 // d.stateTrade         交易状态
 // d.tradeID            交易号
@@ -31,6 +32,10 @@
 // d.timeModified       最近修改时间
 // d.tradeSource        交易平台/来源地（指天猫、淘宝之类）
 
+// ============================================================================= //
+
+// 导入支付宝或微信数据
+
 function importData(filepath, user, platform, charset){
     user = arguments[1] ? arguments[1] : "user_defult";
     let filenamestart = filepath.split("/").pop().slice(0,6);
@@ -40,16 +45,14 @@ function importData(filepath, user, platform, charset){
     let tablehead_alipay = "tradeID,orderID,timeCreated,timePurchased,timeModified,tradeSource,tradeType,trader,goodName,value,dealType,stateTrade,serviceFee,valueRefund,note,stateCapital";
     let tablehead_wechat = "timePurchased,tradeType,trader,goodName,dealType,value,dealMethod,stateTrade,tradeID,orderID,note";
     let tablehead = platform=="alipay" ? tablehead_alipay : tablehead_wechat ;
-    let slice_start = platform=="alipay" ? 5 : 17 ;
-    let slice_end = platform=="alipay" ? -8 : -1 ;
     return fetch(filepath)
-    .then(response => response.arrayBuffer())
-    .then(buffer => new TextDecoder(charset).decode(buffer))
-    .then(notdata => notdata.split("\r\n").slice(slice_start, slice_end))
-    .then(notdata => {notdata.unshift(tablehead); return notdata})
-    .then(notdatas => notdatas.join("\r\n"))
-    .then(rawdata => d3.csvParse(rawdata))
-    .then(predata => {
+    .then(response => response.arrayBuffer()  )
+    .then(buffer => new TextDecoder(charset).decode(buffer)  )
+    .then(notdata => platform=="alipay" ? notdata.split("\r\n").slice(5, -8) : notdata.split("\r\n").slice(17)  )
+    .then(notdata => {notdata.unshift(tablehead); return notdata}  )
+    .then(notdatas => notdatas.join("\r\n")  )
+    .then(rawdata => d3.csvParse(rawdata)  )
+    .then(predata => {// 预处理;
 
         let ks = Object.keys(predata[0]);
         // 删掉首尾空格，增加必要的用户、数据来源、序号等字段
@@ -68,7 +71,7 @@ function importData(filepath, user, platform, charset){
         // 把金额改成数字类型
         // predata.forEach((d,i)=>{
             if (typeof(d.value)=='string'&&d.value.slice(0,1)=="¥") {
-                d.value=Number(d.value.slice(1,-1).trim());
+                d.value=Number(d.value.slice(1).trim());
             } else if (typeof(d.value)=='string') {d.value=Number(d.value.trim());};
             if (typeof(d.valueRefund)=='string') {d.valueRefund=Number(d.valueRefund.trim());};
             if (typeof(d.serviceFee)=='string') {d.serviceFee=Number(d.serviceFee.trim());};
@@ -105,17 +108,141 @@ function importData(filepath, user, platform, charset){
             if(tuikuanIDs.indexOf(tempIDs[j]) == -1)
                 tuikuanIDs.push(tempIDs[j]);
         };
-        console.log(tuikuanIDs);
+        // console.log(tuikuanIDs);
 
         predata.forEach((d,i)=>{
             let x = tuikuanIDs.indexOf(d.orderID);
             if(x != -1) {
-                console.log(`【${i}】【${x}】【${d.stateTrade}】【${d.orderID}】【${d.goodName}】【${d.value}】【${d.valueRefund}】`);
+                // console.log(`【${i}】【${x}】【${d.stateTrade}】【${d.orderID}】【${d.goodName}】【${d.value}】【${d.valueRefund}】`);
             };
         });
 
         return predata;
     })
+    // .then(data => catData(data))
+}
+
+// ============================================================================= //
+
+// 导入分类
+
+function importCats(filepath, charset) {
+    return fetch(filepath)
+    .then(response => response.arrayBuffer())
+    .then(buffer => new TextDecoder(charset).decode(buffer))
+    .then(t => JSON.parse(t))
+}
+
+// 全局变量 cats 用来存放分类
+
+var cats = {"收入": {}, "支出": {}};
+
+// 将分类文件读入 cats 的异步函数
+
+async function readCats(filepath, charset, old){
+    charset = arguments[1] ? arguments[1] : "utf-8";
+    old = arguments[2] ? arguments[2] : false;
+    try {
+        const cls = await importCats(filepath, charset);
+        cats = old ? cls2cats(cls) : cls;
+        onCatsReaded(cats);// 回调函数
+    } catch (e) {
+        console.log("some error happend in readCats()");
+        console.log(e);
+        throw e;
+    }
+}
+
+// 在分类真正读取之后回调的函数。
+
+function onCatsReaded(cats){
+    // console.log(cats);
+    // 具体应该写重新给数据分类什么的
+}
+
+// 将老版单层分类json转换成新版双层json的函数
+
+function cls2cats(cls) {
+    var c = {"收入": {}, "支出": {}};
+    let ks = Object.keys(cls);
+    // console.log(ks);
+    for (let k in ks) {
+        if (ks[k].slice(0,3)=="收入-") {
+            c["收入"][ks[k].slice(3)]=cls[ks[k]];
+        } else {
+            c["支出"][ks[k]]=cls[ks[k]];
+        }
+    };
+    return c;
+}
+
+// 给数据分类
+
+function catData(data) {
+    let shouruks = Object.keys(cats["收入"]);
+    let zhichuks = Object.keys(cats["支出"]);
+    data.forEach((d,i)=>{
+        if (d.valueLost!=0) {
+            d.dealCat = "其他支出";
+            d.dealCatSub = "退货损失";
+        } else if (d.dealType == "收入" && d.aboutRefund) {
+            d.dealCat = "退款收入";
+            d.dealCatSub = "退款收入";
+        } else if (d.dealType == "收入") {
+            let ks = shouruks;
+            for (let k in ks) {
+                let ink = false;
+                let ws = cats["收入"][ks[k]];
+                for (let w in ws) {
+                    if (d.goodName.search(ws[w]) != -1 || d.trader.search(ws[w]) != -1) {
+                        ink = true;
+                    }
+                }
+                if (ink) {
+                    let hs = ks[k].split("-");
+                    if (hs.length >= 2) {
+                        d.dealCat = hs[0];
+                        d.dealCatSub = hs[1];
+                    } else {
+                        d.dealCat = hs[0];
+                        d.dealCatSub = hs[0];
+                    }
+                }
+            }
+            if (!d.dealCat) {
+                d.dealCat = "其他收入";
+                d.dealCatSub = "其他收入";
+                console.log(`【${d.dealCatSub}】【${d.trader}】【${d.goodName}】【${d.value}】「${d.idx}」「${d.orderID}」「${d.stateTrade}」`);
+            }
+        } else if (d.dealType == "支出") {
+            let ks = zhichuks;
+            for (let k in ks) {
+                let ink = false;
+                let ws = cats["支出"][ks[k]];
+                for (let w in ws) {
+                    if (d.goodName.search(ws[w]) != -1 || d.trader.search(ws[w]) != -1) {
+                        ink = true;
+                    }
+                }
+                if (ink) {
+                    let hs = ks[k].split("-");
+                    if (hs.length >= 2) {
+                        d.dealCat = hs[0];
+                        d.dealCatSub = hs[1];
+                    } else {
+                        d.dealCat = hs[0];
+                        d.dealCatSub = hs[0];
+                    }
+                }
+            }
+            if (!d.dealCat) {
+                d.dealCat = "其他支出";
+                d.dealCatSub = "其他支出";
+                console.log(`【${d.dealCatSub}】【${d.trader}】【${d.goodName}】【${d.value}】「${d.idx}」「${d.orderID}」「${d.stateTrade}」`);
+            }
+        }
+    })
+    return data;
 }
 
 // ============================================================================= //
@@ -129,19 +256,31 @@ var filedatas = [];
 
 async function addData(filepath, user, platform, charset){
     try {
-        const data = await importData(filepath, user, platform, charset);
+        var data = await importData(filepath, user, platform, charset);
+        data = catData(data);
         filedatas.push(data);
-        onDataAdded(data);// 回调函数
+        onDataAdded(data, filedatas);// 回调函数
     } catch (e) {
-        console.log("some error happend in importData()");
+        console.log("some error happend in addData()");
         console.log(e);
         throw e;
     }
 }
 
+// 在数据真正读取之后回调的函数，这玩意儿应该放在 main.js 里。
+
+function onDataAdded(data, filedatas){
+    console.log(filedatas);
+    // 具体应该写更新视图之类的东西
+}
+
 // ============================================================================= //
 
-// 读取数据，存入 filedatas，注意，是异步的，有延迟。这玩意儿应该放在 main.js 里。
+// 读取分类，存入 cats，注意，是异步的，有延迟。
+
+readCats("./python/cls.json", null, true);
+
+// 读取数据，存入 filedatas，注意，是异步的，有延迟。
 
 addData("./data/alipay_record_20191226_1649_1.csv", "mx");
 addData("./data/alipay_record_20191225_2224_1.csv", "sch", null, "utf-8");
@@ -149,12 +288,7 @@ addData("./data/微信支付账单(20180101-20180401).csv", "sch");
 
 // ============================================================================= //
 
-// 在数据真正读取之后回调的函数，这玩意儿应该放在 main.js 里。
 
-function onDataAdded(data){
-    console.log(data);
-    // 具体应该写更新视图之类的东西
-}
 
 // ============================================================================= //
 
