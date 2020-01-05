@@ -18,7 +18,7 @@
             <h1>Trea-V-sure</h1>
             <h3>专属的账单可视化</h3>
         </div>
-        
+
         <div id="slider">
             <div class="col-sm-2">
                 <p id="value-time"></p>
@@ -49,17 +49,20 @@
 
 
     <div class="circle-tree-graph">
+      <svg id="partitionSVG" viewBox="0 0 932 932"></svg>
     </div>
 
     <div id="record-list">
 
     </div>
 
-    <script type="text/javascript" src="lib/d3.min.js"></script>
+    <!--<script type="text/javascript" src="lib/d3.min.js"></script>-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script type="text/javascript" src="lib/jquery.min.js"></script>
     <script type="text/javascript" src="lib/d3-simple-slider.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
+    <script type="text/javascript" src="js/drawCirc.js"></script>
     <script type="text/javascript" src="js/drawStackChart.js"></script>
     <script type="text/javascript" src="js/generateData.js"></script>
     <script type="text/javascript" src="js/drawHeatmap.js"></script>
