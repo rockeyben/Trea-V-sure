@@ -25,14 +25,14 @@ function drawRecordList(){
         .append('tr').attr("class", "tr-head")
         ;
     var thead_tr = d3.select("#record-list > #record-table > thead > tr.tr-head");
-    thead_tr.append('th').text(`timePurchased`);
-    thead_tr.append('th').text(`trader`);
-    thead_tr.append('th').text(`goodName`);
-    thead_tr.append('th').text(`dealType`);
-    thead_tr.append('th').text(`dealCat`);
-    thead_tr.append('th').text(`dealCatSub`);
-    thead_tr.append('th').text(`value`);
-    thead_tr.append('th').text(`user`);
+    thead_tr.append('th').text(`时间`);
+    thead_tr.append('th').text(`交易对方`);
+    thead_tr.append('th').text(`内容`);
+    thead_tr.append('th').text(`收/支`);
+    thead_tr.append('th').text(`父类`);
+    thead_tr.append('th').text(`子类`);
+    thead_tr.append('th').text(`金额`);
+    thead_tr.append('th').text(`用户`);
 
     d3.select("#record-list > #record-table").append("tbody");
 

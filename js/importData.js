@@ -74,7 +74,7 @@ function praseData(datatext, user, platform, charset){
     // predata.forEach((d,i)=>{
         if (d.timeCreated) {d.timeCreated=new Date(d.timeCreated);};
         if (d.timeModified) {d.timeModified=new Date(d.timeModified);};
-        if (d.timePurchased == "") {
+        if (d.timePurchased || d.timePurchased == "") {
             d.timePurchased=new Date(d.timePurchased);
             // 如果付款时间为空（支付宝数据会出现），那么以发生时间为参考时间，而微信数据只有付款时间，我们只能用付款时间来做时间参照;
             if (d.timePurchased.toString()=="Invalid Date") {d.time=d.timeCreated;} else {d.time=d.timePurchased;}
@@ -263,18 +263,83 @@ function catData(data) {
 // ============================================================================= //
 
 
-// 全局变量 filedatas 用来存放所有的账单数据
+function onChangeFile() {
+    const fileList = document.forms["file-form"]["file-input"].files;
+    // console.log(this);
+    for (let i=0;i<fileList.length;i++) {
+        let file = fileList[i];
+        if (file) {
+            var f = {};
+            f.fileName = file.name;
+            let filenamestart = f.fileName.slice(0,6);
+            let c = document.forms["file-form"]["file-charset"].value;
+            let f_charset = c ? c : ( filenamestart=="alipay" ? "GBK" : "utf-8" );
+            if (!document.forms["file-form"]["file-charset"].value || document.forms["file-form"]["file-charset"].value=="utf-8") {document.forms["file-form"]["file-charset"].value=f_charset}
+        }
+    }
+}
 
+function onSubmit() {
+    const fileList = document.forms["file-form"]["file-input"].files;
+    console.log(fileList);
+    for (let i=0;i<fileList.length;i++) {
+        let file = fileList[i];
+        if (file) {
+            var f = {};
+            f.fileName = file.name;
+            let filenamestart = f.fileName.slice(0,6);
+            f.platform = filenamestart=="alipay" ? "alipay" : ( filenamestart=="微信支付账单" ? "wechat" : "unknown" );
+            f.user = document.forms["file-form"]["file-user"].value ? document.forms["file-form"]["file-user"].value : "unknown";
+            f.charset = document.forms["file-form"]["file-charset"].value ? document.forms["file-form"]["file-charset"].value : ( filenamestart=="alipay" ? "GBK" : "utf-8" );
+            f.selected = true;
+            filedetials.push(f);
+
+            // https://segmentfault.com/a/1190000006600936
+            // https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader
+            // https://www.cnblogs.com/FHC1994/p/12104170.html
+
+            var reader = new FileReader();
+            reader.readAsText(file, f.charset);
+            reader.onload = function(evt) {
+                console.log("正在读取！");
+                // filedetials.push({"filepath":filepath,"user":user,"platform":platform,"charset":charset});
+                addUserData(this.result, f.user, f.platform, f.charset)
+                console.log("读取完毕！");
+            };
+        }
+    }
+}
+
+// ============================================================================= //
+
+
+// 全局变量 filedatas 用来存放所有的账单数据
 var filedatas = [];
+
+// 全局变量 filedetials 用来存放所有的账单文件信息
+var filedetials = [];
+// f.fileName
+// f.user
+// f.platform
+// f.charset
+// f.selected
 
 // 将数据读入 filedatas 的异步函数
 
 async function addData(filepath, user, platform, charset){
     try {
+        var f = {};
+        f.fileName = filepath.split("/").slice(-1);
+        f.user = user;
+        f.platform = platform;
+        f.charset = charset;
+        f.selected = true;
+        filedetials.push(f);
+
         var data = await importData(filepath, user, platform, charset);
         data = catData(data);
         filedatas.push(data);
-        onDataAdded(data, filedatas);// 回调函数
+        onDataAdded(data, filedatas, filedetials);// 回调函数
     } catch (e) {
         console.log("some error happend in addData()");
         console.log(e);
@@ -286,12 +351,121 @@ function addUserData(datatext, user, platform, charset){
     var data = praseData(datatext, user, platform, charset);
     data = catData(data);
     filedatas.push(data);
-    onDataAdded(data, filedatas);// 回调函数
+    d3.select("#tab-datas > a.nav-link > span.span-nav-desc").text("")
+    onDataAdded(data, filedatas, filedetials);// 回调函数
+}
+
+function removeData(x){
+    // console.log(`删除第 ${x} 行的数据文件`);
+    // console.log(d3.selectAll("#files-overview > #files-overview-table > tbody > tr.tr-row"));
+    filedatas = filedatas.filter((v, i) => (i != x));
+    filedetials = filedetials.filter((v, i) => (i != x));
+    d3.select(`#file-tr-${x}`).remove();
+    theData();
+}
+
+function theData(){
+    let the_data = [];
+    filedetials.forEach((f,i)=>{
+        if(f.selected){
+            data_i = filedatas[i];
+            data_i.forEach((d,j)=>{
+                the_data.push(d);
+            })
+        }
+    })
+    printData(the_data);
+    return the_data;
+}
+
+function printData(data){
+    d3.select("#data-overview > #data-overview-table").remove();
+    d3.select("#data-overview")
+        .append('table').attr("id", "data-overview-table").attr("class", "table table-bordered")
+        .append('thead')
+        .append('tr').attr("class", "tr-head")
+        ;
+    var thead_tr = d3.select("#data-overview > #data-overview-table > thead > tr.tr-head");
+    thead_tr.append('th').text(`时间`);
+    thead_tr.append('th').text(`交易对方`);
+    thead_tr.append('th').text(`内容`);
+    thead_tr.append('th').text(`收/支`);
+    thead_tr.append('th').text(`父类`);
+    thead_tr.append('th').text(`子类`);
+    thead_tr.append('th').text(`金额`);
+    thead_tr.append('th').text(`用户`);
+
+    d3.select("#data-overview > #data-overview-table").append("tbody");
+
+    data.forEach((d,i)=>{
+        // console.log(f);
+        var tr = d3.select("#data-overview > #data-overview-table > tbody").append('tr').attr('class', 'tr-row')
+            .attr("id",`data-tr-${i}`)
+            ;
+        tr.append('td').text(`${d.time}`);
+        tr.append('td').text(`${d.trader}`);
+        tr.append('td').text(`${d.goodName}`);
+        tr.append('td').text(`${d.dealType}`);
+        tr.append('td').text(`${d.dealCat}`);
+        tr.append('td').text(`${d.dealCatSub}`);
+        tr.append('td').text(`${d.value}`);
+        tr.append('td').text(`${d.user}`);
+    })
 }
 
 // 在数据真正读取之后回调的函数，这玩意儿应该放在 main.js 里。
 
-function onDataAdded(data, filedatas){
+function onDataAdded(data_in, filedatas, filedetials){
+    d3.select("#files-overview > #files-overview-table").remove();
+    d3.select("#files-overview")
+        .append('table').attr("id", "files-overview-table").attr("class", "table table-bordered")
+        .append('thead')
+        .append('tr').attr("class", "tr-head")
+        ;
+    var thead_tr = d3.select("#files-overview > #files-overview-table > thead > tr.tr-head");
+    thead_tr.append('th').text(`序号`);
+    thead_tr.append('th').text(`文件名`);
+    thead_tr.append('th').text(`用户`);
+    thead_tr.append('th').text(`数据来源`);
+    thead_tr.append('th').text(`字符集`);
+    thead_tr.append('th').text(`在视图中使用`);
+    thead_tr.append('th').text(`删除`);
+
+    d3.select("#files-overview > #files-overview-table").append("tbody");
+
+    filedetials.forEach((f,i)=>{
+        // console.log(f);
+        var tr = d3.select("#files-overview > #files-overview-table > tbody").append('tr').attr('class', 'tr-row')
+            .attr("id",`file-tr-${i}`)
+            ;
+        tr.append('td').text(`${i}`);
+        tr.append('td').text(`${f.fileName}`);
+        tr.append('td').text(`${f.user}`);
+        tr.append('td').text(`${f.platform}`);
+        tr.append('td').text(`${f.charset}`);
+        //<input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+        tr.append('td').append('input')
+            .attr("type",`checkbox`)
+            .attr("id",`file-selected-${i}`)
+            .attr("checked",`${f.selected ? true : false}`)
+            .on("click",()=>{
+                this.checked = this.checked ? false : true;
+                f.selected = f.selected ? false : true;
+                theData();
+            })
+            ;
+        tr.append('td').text(`-`)
+            .on("click",()=>{
+                removeData(i);
+            })
+            ;
+    })
+
+    var data = theData();
+
+
+
+    d3.selectAll("#partitionSVG *").remove();
     drawCirc(toCircData(data));
     // 具体应该写更新视图之类的东西
     
