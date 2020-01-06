@@ -31,13 +31,13 @@ function drawRecordList(){
         .attr('id', 'date_text_3')
 
     columns = [{text: '交易时间', sort: TableSort.numeric},
-        {text: '交易对方', sort: TableSort.alphabet},
-        {text: '商品名称', sort: TableSort.alphabet},
-        {text: '收入/支出', sort: TableSort.alphabet},
-        {text: '主分类', sort: TableSort.alphabet},
-        {text: '次分类', sort: TableSort.alphabet},
+        {text: '交易对方', sort: TableSort.alphabetic},
+        {text: '商品名称', sort: TableSort.alphabetic},
+        {text: '收入/支出', sort: TableSort.alphabetic},
+        {text: '主分类', sort: TableSort.alphabetic},
+        {text: '次分类', sort: TableSort.alphabetic},
         {text: '金额', sort: TableSort.numeric},
-        {text: '用户', sort: TableSort.alphabet}]
+        {text: '用户', sort: TableSort.alphabetic}]
     
     var data_array = [];
     
