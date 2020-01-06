@@ -186,6 +186,14 @@ function drawCirc(data){
       const color = d3.scaleOrdinal()
                       .range(d3.quantize(d3.interpolateRainbow,
                                          data.children.length + 1));
+/*
+      function subColor(para){
+        const z = d3.scaleOrdinal().range(d3.quantize(d3.interpolate("red", "blue"), para.parent.children.length + 1));
+        return z(para.data.name);
+      }
+*/
+
+      const subColor = d3.scaleOrdinal(["#a6cee3","#1f78b4","#b2df8a","#33a02c","#fb9a99","#e31a1c","#fdbf6f","#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928"]);
 
       root.each(d => d.current = d);
 
@@ -202,8 +210,13 @@ function drawCirc(data){
                     .data(root.descendants().slice(1))
                     .join("path")
                     .attr("fill", d => {
-                      while (d.depth > 1) { d = d.parent; }
-                      return color(d.data.name).brighter();
+                      if (d.depth == 1){
+                        return color(d.data.name);
+                      }
+                      else{
+                        while (d.depth > 2) { d = d.parent; }
+                        return subColor(d.data.name);
+                      }
                     })
                     .attr("fill-opacity", d =>
                       arcVisible(d.current) ? (d.children ? 0.6 : 0.4) : 0)
