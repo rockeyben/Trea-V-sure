@@ -10,3 +10,13 @@ function date2index(date){
    var index = (curr.getTime() - s_year.getTime()) / (1000 * 3600 * 24);
    return Math.floor(index);
 }
+
+function updateCurrClass(nc){
+    let b = CURR_CLASS.indexOf(nc);
+    if (b == -1){
+        CURR_CLASS.push(nc);
+    }
+    else{
+        CURR_CLASS.splice(b, 1);
+    }
+}

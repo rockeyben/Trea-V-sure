@@ -277,6 +277,8 @@ function onDataAdded(data, filedatas){
 
     drawSlider(START_YEAR, END_YEAR);
     drawCategorySelecter();
+    
+    //drawCheckBox(CATEGORY);
     drawDateSelecter();
     drawStackChart(ALL_DATA[0].dates.slice(10, 30), [1, 2, 3, 4]);
 

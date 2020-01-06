@@ -24,9 +24,11 @@ function drawStackChart(data, order) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
+    var upBound = d3.max(data, function (d) { return d.count; })
     x.domain(d3.extent(data, function (d) { return new Date(d.date); }));
-    y.domain([0, d3.max(data, function (d) { return d.count; })]);
-
+    y.domain([0, upBound]);
+    console.log(upBound)
+    console.log(data)
     var xband = x(new Date(data[1].date)) - x(new Date(data[0].date));
 
     svg.append("g")
@@ -45,18 +47,21 @@ function drawStackChart(data, order) {
         .text("Money");
     
     //console.log(data);
-
+    console.log(order)
     data.forEach(function (d) {
         d.stacked = [];
         y0 = 0;
-        for(i = 1; i < CATEGORY.length; i++){
-            index = order[i-1];
+        for(i = 0; i < CATEGORY.length; i++){
+            index = order[i];
             
             stackInfo = {};
             stackInfo['y0'] = y0;
             stackInfo['y1'] = y0 + d[CATEGORY[index]];
             y0 += d[CATEGORY[index]];
-            stackInfo['color'] = CATEGORY_COLOR[index];
+            if (CURR_CLASS.indexOf(index) != -1)
+                stackInfo['color'] = 'rgb(136, 86, 167)';
+            else
+                stackInfo['color'] = 'rgb(191, 211, 230)';
             //console.log(stackInfo)
             d.stacked.push(stackInfo);
         }
@@ -93,9 +98,11 @@ function updateStackChart() {
     var e_i = date2index(STACK_END_DATE);
 
     //console.log(s_i, e_i);
-    var order = [CURR_CLASS];
-    for (i = 1; i < CATEGORY.length; i++) {
-        if (i != CURR_CLASS)
+    var order = [];
+    for (i = 0; i < CURR_CLASS.length; i++)
+        order.push(CURR_CLASS[i]);
+    for (i = 0; i < CATEGORY.length; i++) {
+        if (CURR_CLASS.indexOf(i) == -1)
             order.push(i);
     }
     //console.log(order)

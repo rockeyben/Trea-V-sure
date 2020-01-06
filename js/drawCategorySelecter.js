@@ -1,40 +1,50 @@
 function drawCategorySelecter(){
     var dx = 20;
-    var button_size = 80;
-    var width = (button_size + dx)* 5;
-    var height = (button_size + dx) * (Math.floor(CATEGORY.length/5) + 1);
+    var button_size = 50;
+    var columns = 5;
+    var width = (button_size*2 + dx)* columns;
+    var height = (button_size + dx) * (Math.floor(CATEGORY.length/columns) + 1);
     var selecterSvg = d3.select('#category-selecter')
         .append('svg')
         .attr('width', width)
         .attr('height', height)
         .append('g')
 
-    
     var selecterRects =  selecterSvg.selectAll('g')
-        .data(() => d3.range(CATEGORY.length))
+        .data(() => d3.range(CATEGORY.length + 2))
         .enter()
         .append('rect')
         .attr('width', button_size)
         .attr('height', button_size)
-        .attr('x', (d) => (button_size + dx) * (d % 5))
-        .attr('y', (d) => (button_size + dx) * (Math.floor(d / 5)) )
-        .style('fill', (d) => CATEGORY_COLOR[d])
+        .attr('x', (d) => (button_size*2 + dx) * (d % columns))
+        .attr('y', (d) => (button_size + dx) * (Math.floor(d / columns)) )
+        .style('fill', '#eee')
         .on('click', function (d) {
-            CURR_CLASS = d;
+            updateCurrClass(d);
+            console.log(CURR_CLASS)
+            if(CURR_CLASS.indexOf(d) != -1){
+                d3.select(this)
+                    .style("fill", CATEGORY_COLOR[d]);
+            }
+            else{
+                d3.select(this)
+                    .style('fill', '#eee');
+            }
             updateHeatmap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
-
             if(d != 0)
                 updateStackChart();
         })
         .on("mouseover", function (d) {
             d3.select(this)
-                .style("fill", "black");
+                .style("fill", CATEGORY_COLOR[d]);
         })
         .on("mouseout", function (d) {
-            d3.select(this)
-                .style('fill', CATEGORY_COLOR[d]);
-        }
-        );
+            console.log(CURR_CLASS, d)
+            if(CURR_CLASS.indexOf(d) == -1){
+                d3.select(this)
+                    .style('fill', '#eee');
+            }
+        });
 
         
     var texts = selecterSvg.selectAll('g')
@@ -44,15 +54,10 @@ function drawCategorySelecter(){
         .text(function (d) {
             return NAME_DICT[CATEGORY[d]];
         })
-        .attr('x', (d) => (button_size + dx) * (d % 5) + 5)
-        .attr('y', (d) => (button_size + dx) * (Math.floor(d / 5)))
+        .attr('x', (d) => (button_size*2 + dx) * (d % columns) + 5)
+        .attr('y', (d) => (button_size + dx) * (Math.floor(d / columns)))
         .attr('dy', button_size-10)
         .attr('class', 'text-category')
-        .on('click', function (d) {
-            CURR_CLASS = d;
-            updateHeatmap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
-            updateStackChart();
-        })
 
 }
 

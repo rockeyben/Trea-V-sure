@@ -10,6 +10,7 @@
     <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="css/svg_style.css" rel="stylesheet" type="text/css">
+    <link href="css/d3-tablesort.css" rel="stylesheet" type="text/css">
     <style type="text/css">
         body{background: #eee;}
         .container.main{background: #fff;}
@@ -19,6 +20,7 @@
 </head>
 
 <body>
+    
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -42,7 +44,8 @@
         </form> -->
       </div>
     </nav>
-
+    
+    
 
     <div class="container my-5 py-5 main" id="main-views">
         <div class="row" id="wrap-heatmap">
@@ -54,7 +57,7 @@
                     <div id="js-heatmap"></div>
                     <div id="js-months"></div>
                     <div id="js-legend"></div>
-                    <div id="tooltip"></div>
+                    
                 </div>
             </div>
         </div>
@@ -84,6 +87,7 @@
         </div>
     </div>
 
+    <div id="tooltip"></div>
 
 
 
@@ -97,6 +101,7 @@
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script type="text/javascript" src="lib/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/d3-tablesort.js"></script>
     <script type="text/javascript" src="lib/d3-simple-slider.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 

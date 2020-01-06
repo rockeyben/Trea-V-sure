@@ -13,6 +13,7 @@ svg {
   stroke-width: 3px;
 }
 
+
 .color0-0 { fill: #d6e685 }
 .color0-1 { fill: #44a340 }
 .color0-2 { fill: #28752d }
@@ -128,9 +129,11 @@ svg {
 }
 
 .text-category{
-    font-size: 35px;
-    fill:#fff;
+    font-size: 16px;
+    fill:black;
 }
+
+
 
 
 
@@ -177,30 +180,9 @@ svg {
 }
 
 
-/* Column Style */
-#record-list td {
-color: #000;
-}
-/* Heading and Column Style */
-#record-list tr, #record-list th {
-border-width: 1px;
-border-style: solid;
-border-color: rgb(156, 186, 95);
-}
-
-/* Padding and font style */
-#record-list td, #record-list th {
-padding: 5px 10px;
-font-size: 12px;
-font-family: Verdana;
-font-weight: bold;
-}
-
-#record-list th hover{
-  fill: black
-}
 
 #record-list{
+  width: 100%;
   display: block;
   margin-left: 4%;
 }

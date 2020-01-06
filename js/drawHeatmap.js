@@ -5,11 +5,21 @@ function createHeatMap(data, startYear, endYear) {
     var margin = {top: 10, right: 10, bottom: 10, left: 10};
     var dx = 35;
     var gridClass = 'js-date-grid day';
+
+    var dates = data.dates;
+    var upBound = 0;
+    dates.forEach((d) => {
+        d.count = 0;
+        for (c = 0; c < CURR_CLASS.length; c++) {
+            d.count += d[CATEGORY[CURR_CLASS[c]]];
+            upBound = Math.max(upBound, d[CATEGORY[CURR_CLASS[c]]]);   
+        }
+    });
+    
     var formatColor = d3.scaleQuantize()
-        .domain([0, data.maxCount[CURR_CLASS]])
+        .domain([0, upBound])
         .range(d3.range(NUMBER_OF_COLORS)
         .map((d) => `color0-${d}`));
-
 
     var heatmapSvg = d3.select('#js-heatmap').selectAll('svg.heatmap')
         .enter()
@@ -38,7 +48,9 @@ function createHeatMap(data, startYear, endYear) {
         .attr('class', 'text-year')
         .text((d) => d);
 
-    var dates = data.dates;
+
+
+    console.log(dates)
     rect.selectAll('.day')
         // The heatmap will contain all the days in that year.
         .data(dates)
@@ -51,9 +63,15 @@ function createHeatMap(data, startYear, endYear) {
         .attr('y', (d) => (new Date(d.date)).getDay() * CELL_SIZE)
         .attr('date', (d) => d.date)
         // Add the colors to the grids.
-        .attr('class', (d) => `${gridClass} ${formatColor(d[CATEGORY[CURR_CLASS]])}`)
+        .attr('class', function(d) { 
+                console.log(upBound, d.count)
+                if(upBound == 0 || d.count == 0)
+                    return `${gridClass} #eee`
+                else
+                    return `${gridClass} ${formatColor(d.count)}`
+            })
         .on('click', function (d) {
-            console.log(IS_SELECTING)
+            //console.log(IS_SELECTING)
             if(IS_SELECTING == 1){
                 STACK_START_DATE = new Date(d.date);
                 IS_SELECTING += 1;
@@ -81,15 +99,15 @@ function createHeatMap(data, startYear, endYear) {
             //console.log(d.date)
             div.transition()
                 .style('opacity', .9);
-            div.html("<span id='tooltip' style='color: black'>" + d.date + "</span></br></br>" +
-                "<span id='tooltip' style='color: black'>Total:" + d.count + "</span></br>" +
-                "<span id='tooltip' style='color: black'>Food:" + d.food + "</span></br>" +
-                "<span id='tooltip' style='color: black'>Clothes:" + d.clothes + "</span></br>" +
-                "<span id='tooltip' style='color: black'>Living:" + d.living + "</span></br>" +
-                "<span id='tooltip' style='color: black'>Transport:" + d.transport + "</span>"
-                ) 
-                .style('left', (d3.event.pageX+20)+'px')
-                .style('top', (d3.event.pageY+20)+'px')
+            var vis_html = "<span id='tooltip' style='color: black'>" + d.date + "</span></br></br>";
+            CATEGORY.forEach((c)=>{
+                if(d[c] > 0){
+                    vis_html += "<span id='tooltip' style='color: black'>" + c + ":" + d[c] + "</span></br>";
+                }
+            })
+            div.html(vis_html) 
+                .style('left', (d3.event.pageX)+'px')
+                .style('top', (d3.event.pageY)+'px')
         })
         .on("mouseout", function (d) {
             div.style("opacity", 0.0);
@@ -140,18 +158,34 @@ function createHeatMap(data, startYear, endYear) {
 function updateHeatmap(data, startYear, endYear) {
     title_year = d3.select('.text-year');
     title_year.text(startYear);
+    var dates = data.dates;
+    var upBound = 0;
+    dates.forEach((d) => {
+        d.count = 0;
+        for (c = 0; c < CURR_CLASS.length; c++) {
+            //console.log(upBound, d[CATEGORY[CURR_CLASS[c]]]);
+            upBound = Math.max(upBound, d[CATEGORY[CURR_CLASS[c]]]);
+            d.count += d[CATEGORY[CURR_CLASS[c]]];
+        }
+    });
 
     var gridClass = 'js-date-grid day';
     var formatColor = d3.scaleQuantize()
-        .domain([0, data.maxCount[CURR_CLASS]])
+        .domain([0, upBound])
         .range(d3.range(NUMBER_OF_COLORS)
             .map((d) => `color0-${d}`));
+    //console.log(data.maxCount[CURR_CLASS])
 
-    grid = d3.selectAll('.day').data(data.dates)
+
+    grid = d3.selectAll('.day').data(dates)
         .attr('x', (d) => d3.timeFormat('%U')(new Date(d.date)) * CELL_SIZE)
         .attr('y', (d) => (new Date(d.date)).getDay() * CELL_SIZE)
-        .attr('class', (d) => `${gridClass} ${formatColor(d[CATEGORY[CURR_CLASS]])}`);
-
+        .attr('class', function (d) {
+            if (upBound == 0 || d.count == 0)
+                return `${gridClass} #eee`
+            else
+                return `${gridClass} ${formatColor(d.count)}`
+        })
     var legendSvg = d3.select('#js-legend')
         .selectAll('rect')
         .data(() => d3.range(7))

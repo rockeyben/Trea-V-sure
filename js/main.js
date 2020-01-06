@@ -3,7 +3,7 @@ var CATEGORY = [];
 
 var NAME_DICT = {};
 var CATEGORY_COLOR = [];
-var CURR_CLASS = 1;
+var CURR_CLASS = [];
 var CELL_SIZE = 20;
 var NUMBER_OF_COLORS = 6;
 var START_YEAR = 2010;
