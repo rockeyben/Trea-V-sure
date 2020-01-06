@@ -2,6 +2,8 @@
 
 'use strict';
 
+var datas
+
 function updateCircData(val, ind){
   var b = circData;
   for(var i = 0; i < ind.length - 1 ; i++){
@@ -256,6 +258,8 @@ function drawCirc(data){
       const color = d3.scaleOrdinal()
                       .range(d3.quantize(d3.interpolateRainbow,
                                          data.children.length + 1));
+      console.log(root.descendants().slice(1));
+      datas = root.descendants().slice(1);
 /*
       function subColor(para){
         const z = d3.scaleOrdinal().range(d3.quantize(d3.interpolate("red", "blue"), para.parent.children.length + 1));
@@ -263,7 +267,13 @@ function drawCirc(data){
       }
 */
 
-      const subColor = d3.scaleOrdinal(["#a6cee3","#1f78b4","#b2df8a","#33a02c","#fb9a99","#e31a1c","#fdbf6f","#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928"]);
+      const subColor = function (para){
+        let z = [];
+        para.parent.children.forEach(d => z.push(d.data.name));
+        return d3.scaleOrdinal()
+                      .domain(z)
+                      .range(d3.quantize(d3.interpolateRainbow,
+                                         para.parent.children.length + 1))(para.data.name);}
 
       root.each(d => d.current = d);
 
@@ -284,8 +294,9 @@ function drawCirc(data){
                         return color(d.data.name);
                       }
                       else{
-                        while (d.depth > 2) { d = d.parent; }
-                        return subColor(d.data.name);
+                        while (d.depth > 3) { d = d.parent; }
+                        console.log(subColor(d))
+                        return subColor(d);
                       }
                     })
                     .attr("fill-opacity", d =>
