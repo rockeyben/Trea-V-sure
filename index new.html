@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Trea-V-sure</title>
+
+    <!-- <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"> -->
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- <link href="css/main.css" rel="stylesheet" type="text/css"> -->
+    <style type="text/css">
+        #fileInput{display: inline-block; background: #eee;}
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="filePicker">
+            <label>导入支付宝或微信文件</label>
+            <input id="fileInput" type="file" name="file" multiple="multiple" accept=".csv,.CSV" />
+            <input id="btn_add" type="button" name="btn_add" value="执行增加" />
+            <input id="btn_update" type="button" name="btn_update" value="执行更改" />
+        </div>
+    </div>
+
+    <script type="text/javascript" src="lib/d3.min.js"></script>
+    <!-- <script type="text/javascript" src="lib/jquery.min.js"></script> -->
+    <!-- <script type="text/javascript" src="lib/d3-simple-slider.min.js"></script> -->
+    <!-- <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script> -->
+
+    <script type="text/javascript" src="js/importData.js"></script>
+
+
+
+    <script type="text/javascript">
+        const fileInputElement = document.getElementById("fileInput");
+        fileInputElement.addEventListener("change", handleFiles, false);
+        function handleFiles() {
+            const fileList = this.files; /* now you can work with the file list */
+            var file = fileList[0];
+            if (file) {
+                // https://segmentfault.com/a/1190000006600936
+                // https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader
+                // https://www.cnblogs.com/FHC1994/p/12104170.html
+                var reader = new FileReader();
+                reader.readAsText(file,"GBK");
+                reader.onload = function(evt) {
+                    console.log(this.result);
+                };
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

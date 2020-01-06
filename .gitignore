@@ -5,4 +5,8 @@ data_*.csv
 */.DS_Store?
 .DS_Store
 .DS_Store?
+<<<<<<< HEAD
 /data
+=======
+data/
+>>>>>>> e43d3123676a4ec55ad536b368fecc02658729e9

@@ -1,22 +1,23 @@
 function drawCategorySelecter(){
     var dx = 20;
     var button_size = 80;
-    var width = (button_size + dx)* CATEGORY.length;
-    var height = button_size;
+    var width = (button_size + dx)* 5;
+    var height = (button_size + dx) * (Math.floor(CATEGORY.length/5) + 1);
     var selecterSvg = d3.select('#category-selecter')
         .append('svg')
         .attr('width', width)
         .attr('height', height)
         .append('g')
 
+    
     var selecterRects =  selecterSvg.selectAll('g')
         .data(() => d3.range(CATEGORY.length))
         .enter()
         .append('rect')
         .attr('width', button_size)
         .attr('height', button_size)
-        .attr('x', (d) => (button_size + dx) * d)
-        .attr('y', 0)
+        .attr('x', (d) => (button_size + dx) * (d % 5))
+        .attr('y', (d) => (button_size + dx) * (Math.floor(d / 5)) )
         .style('fill', (d) => CATEGORY_COLOR[d])
         .on('click', function (d) {
             CURR_CLASS = d;
@@ -43,8 +44,8 @@ function drawCategorySelecter(){
         .text(function (d) {
             return NAME_DICT[CATEGORY[d]];
         })
-        .attr('x', (d) => (button_size + dx) * d + 5)
-        .attr('y', 0)
+        .attr('x', (d) => (button_size + dx) * (d % 5) + 5)
+        .attr('y', (d) => (button_size + dx) * (Math.floor(d / 5)))
         .attr('dy', button_size-10)
         .attr('class', 'text-category')
         .on('click', function (d) {

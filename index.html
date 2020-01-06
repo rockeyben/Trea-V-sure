@@ -9,59 +9,98 @@
     <!-- <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"> -->
     <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
-    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="css/svg_style.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        body{background: #eee;}
+        .container.main{background: #fff;}
+        .span-nav-desc{font-size: 0.6em;}
+        #fileInput{display: inline-block; background: #eee;}
+    </style>
 </head>
 
 <body>
-    <div id='top-part'>
-        <div id="headline">
-            <h1>Trea-V-sure</h1>
-            <h3>专属的账单可视化</h3>
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="#">Trea-V-sure</a>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="#">数据<span class="span-nav-desc"> (当前：样例.csv)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">视图<span class="sr-only span-nav-desc"> (当前页面)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">选项<span class="span-nav-desc"> (暂未开放)</span></a>
+          </li>
+        </ul><!-- 
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form> -->
+      </div>
+    </nav>
 
 
-        <div id="slider">
-            <div class="col-sm-2">
-                <p id="value-time"></p>
+    <div class="container my-5 py-5 main" id="main-views">
+        <div class="row" id="wrap-heatmap">
+            <div class="col-md-6 col-sm-12" id='category-selecter'></div>
+            <div class="col-md-6 col-sm-12" id='slider-time'></div>
+            <div class="col-12" id='date-selecter'></div>
+            <div class="col-12" id='wrap-heatmap-themap'>
+                <div id="results">
+                    <div id="js-heatmap"></div>
+                    <div id="js-months"></div>
+                    <div id="js-legend"></div>
+                    <div id="tooltip"></div>
+                </div>
             </div>
-            <div class="col-sm">
-                <div id="slider-time"></div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-6 col-sm-12" id="wrap-stark">
+                <div id="tip-trend"></div>
+            </div>
+            <div class="col-md-6 col-sm-12" id="wrap-circ">
+                <div class="circle-tree-graph"><svg id="partitionSVG" viewBox="0 0 932 932"></svg></div>
             </div>
         </div>
-
-        <div id='category-selecter'>
-            <div class="category-rect"> </div>
-        </div>
-
-        <div id='date-selecter'>
-            <div class="date-selecter-rect"> </div>
-        </div>
-
-        <div id='tip-trend'>
+        <hr />
+        <div class="row">
+            <div class="col" id="record-list">
+            </div>
         </div>
     </div>
 
-    <div id="results">
-        <div id="js-heatmap"></div>
-        <div id="js-months"></div>
-        <div id="js-legend"></div>
-        <div id="tooltip"></div>
+
+    <div class="container my-5 py-5 main" id="main-datas">
+        <div class="filePicker">
+            <label>导入支付宝或微信文件</label>
+            <input id="fileInput" type="file" name="file" multiple="multiple" accept=".csv,.CSV" />
+            <input id="btn_add" type="button" name="btn_add" value="执行增加" />
+            <input id="btn_update" type="button" name="btn_update" value="执行更改" />
+        </div>
     </div>
 
 
-    <div class="circle-tree-graph">
-      <svg id="partitionSVG" viewBox="0 0 932 932"></svg>
-    </div>
 
-    <div id="record-list">
 
-    </div>
+    <!-- <footer class="bg-light pt-4 pb-2">
+      <div class="container text-center">
+        <p>啦啦啦。</p>
+      </div>
+    </footer> -->
 
-    <!--<script type="text/javascript" src="lib/d3.min.js"></script>-->
+
+
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script type="text/javascript" src="lib/jquery.min.js"></script>
     <script type="text/javascript" src="lib/d3-simple-slider.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript" src="js/importData.js"></script>
 
     <script type="text/javascript" src="js/drawCirc.js"></script>
     <script type="text/javascript" src="js/drawStackChart.js"></script>
@@ -73,6 +112,30 @@
     <script type="text/javascript" src="js/importData.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        const fileInputElement = document.getElementById("fileInput");
+        fileInputElement.addEventListener("change", handleFiles, false);
+        function handleFiles() {
+            const fileList = this.files; /* now you can work with the file list */
+            var file = fileList[0];
+            if (file) {
+                // https://segmentfault.com/a/1190000006600936
+                // https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader
+                // https://www.cnblogs.com/FHC1994/p/12104170.html
+                var reader = new FileReader();
+                reader.readAsText(file,"GBK");
+                reader.onload = function(evt) {
+                    console.log(this.result);
+                };
+            }
+        }
+    </script>
+
+
 </body>
 
 </html>
