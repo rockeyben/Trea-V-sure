@@ -363,3 +363,26 @@ function drawCirc(data){
             .attrTween("transform", d => () => labelTransform(d.current));
       }
 }
+
+
+function removeCirc() {
+    var circle = d3.select('#partitionSVG *');
+    circle.remove();
+}
+
+function updateCirc() {
+    var s_i = date2index(STACK_START_DATE);
+    var e_i = date2index(STACK_END_DATE);
+
+    var selected_range = ALL_DATA[CURR_YEAR - START_YEAR].dates.slice(s_i, e_i);
+    var json_format = [];
+    selected_range.forEach((d) => {
+        console.log(d)
+        if (d.records.length > 0)
+          json_format = json_format.concat(d.records);
+    })
+
+    //console.log(json_format)
+    removeCirc();
+    drawCirc(toCircData(json_format));
+}

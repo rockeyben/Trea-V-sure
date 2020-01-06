@@ -294,8 +294,9 @@ function addUserData(datatext, user, platform, charset){
 function onDataAdded(data, filedatas){
     drawCirc(toCircData(data));
     // 具体应该写更新视图之类的东西
-    processData(filedatas[0]);
-
+    
+    processData(data);
+    //updateCirc();
     drawSlider(START_YEAR, END_YEAR);
     drawCategorySelecter();
     
@@ -305,7 +306,7 @@ function onDataAdded(data, filedatas){
 
     //console.log(data.dates);
     createHeatMap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
-    drawRecordList();
+    //drawRecordList();
 }
 
 // ============================================================================= //

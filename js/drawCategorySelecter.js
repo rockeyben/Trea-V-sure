@@ -20,26 +20,56 @@ function drawCategorySelecter(){
         .attr('y', (d) => (button_size + dx) * (Math.floor(d / columns)) )
         .style('fill', '#eee')
         .on('click', function (d) {
-            updateCurrClass(d);
-            console.log(CURR_CLASS)
-            if(CURR_CLASS.indexOf(d) != -1){
-                d3.select(this)
-                    .style("fill", CATEGORY_COLOR[d]);
-            }
-            else{
-                d3.select(this)
-                    .style('fill', '#eee');
-            }
-            updateHeatmap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
-            if(d != 0)
+            if (d < CATEGORY.length){
+                updateCurrClass(d);
+                //console.log(CURR_CLASS)
+                if (CURR_CLASS.indexOf(d) != -1) {
+                    d3.select(this)
+                        .style("fill", CATEGORY_COLOR[0]);
+                }
+                else {
+                    d3.select(this)
+                        .style('fill', '#eee');
+                }
+                updateHeatmap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
                 updateStackChart();
+            }
+            else if(d == CATEGORY.length){
+                // select all
+                CURR_CLASS = [];
+                for(cc = 0; cc < CATEGORY.length; cc++)
+                    CURR_CLASS.push(cc);
+                var all_rects = d3.select("#category-selecter").selectAll("rect");
+                all_rects.style('fill', (d)=>{
+                    //console.log(d);
+                    if (d < CATEGORY.length)
+                        return CATEGORY_COLOR[0];
+                    else
+                        return '#eee';                    
+                })
+                //console.log(CURR_CLASS);
+                updateHeatmap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
+                updateStackChart();
+            }
+            else if(d == CATEGORY.length + 1){
+                // clean all
+                CURR_CLASS = [];
+                var all_rects = d3.select("#category-selecter").selectAll("rect");
+                all_rects.style('fill', (d) => {
+                    //console.log(d);
+                    return '#eee';
+                })
+                updateHeatmap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
+                updateStackChart();
+            }
+            
         })
         .on("mouseover", function (d) {
             d3.select(this)
-                .style("fill", CATEGORY_COLOR[d]);
+                .style("fill", CATEGORY_COLOR[0]);
         })
         .on("mouseout", function (d) {
-            console.log(CURR_CLASS, d)
+            //console.log(CURR_CLASS, d)
             if(CURR_CLASS.indexOf(d) == -1){
                 d3.select(this)
                     .style('fill', '#eee');
@@ -48,11 +78,16 @@ function drawCategorySelecter(){
 
         
     var texts = selecterSvg.selectAll('g')
-        .data(() => d3.range(CATEGORY.length))
+        .data(() => d3.range(CATEGORY.length + 2))
         .enter()
         .append('text')
         .text(function (d) {
-            return NAME_DICT[CATEGORY[d]];
+            if (d < CATEGORY.length)
+                return NAME_DICT[CATEGORY[d]];
+            else if (d == CATEGORY.length)
+                return "全选";
+            else if (d == CATEGORY.length + 1)
+                return "清空";
         })
         .attr('x', (d) => (button_size*2 + dx) * (d % columns) + 5)
         .attr('y', (d) => (button_size + dx) * (Math.floor(d / columns)))
@@ -150,4 +185,8 @@ function updateDateText1(){
 function updateDateText2() {
     var text2 = d3.select('#date_text_2');
     text2.text(d3.timeFormat('%Y-%m-%d')(STACK_END_DATE))
+}
+
+function updateColor() {
+    
 }

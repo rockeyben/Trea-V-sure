@@ -7,7 +7,11 @@ function drawStackChart(data, order) {
         height = 500;
     //console.log(data[0].date, data[data.length - 1].date)
     var x = d3.scaleTime()
-        .rangeRound([0, width]);
+        .rangeRound([0, width])
+        .domain(d3.extent(data, function (d) { return new Date(d.date); }));
+    x.ticks(d3.timeDay.every(5));
+    console.log(x)
+
     //console.log(width)
     var y = d3.scaleLinear()
         .rangeRound([height, 0]);
@@ -25,12 +29,13 @@ function drawStackChart(data, order) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
     var upBound = d3.max(data, function (d) { return d.count; })
-    x.domain(d3.extent(data, function (d) { return new Date(d.date); }));
+    
     y.domain([0, upBound]);
+    console.log("x domain", x.domain)
     console.log(upBound)
     console.log(data)
     var xband = x(new Date(data[1].date)) - x(new Date(data[0].date));
-
+    console.log(xband)
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")

@@ -9,6 +9,8 @@ var NUMBER_OF_COLORS = 6;
 var START_YEAR = 2010;
 var END_YEAR = 2022;
 var CURR_YEAR = 2015;
+var SELECT_ALL = false;
+var CLEAN_ALL = false;
 
 var IS_SELECTING = 0;
 var STACK_START_DATE = new Date(2015, 0, 10);

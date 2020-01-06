@@ -134,7 +134,7 @@ function randomColor() {
 }
 
 function updateCategory(cats){
-    console.log(cats);
+    //console.log(cats);
     for (var Bkey in cats) {
         var item = cats[Bkey];
         for (var Skey in item) {
@@ -143,14 +143,14 @@ function updateCategory(cats){
                 CATEGORY.push(cat_name);
         }
     }
-    console.log(CATEGORY);
+    //console.log(CATEGORY);
     CATEGORY.forEach(function (d) {
-        var color = randomColor();
-        CATEGORY_COLOR.push(color);
         NAME_DICT[d] = d;
     })
 
-    console.log(CATEGORY_COLOR);
-    console.log(NAME_DICT)
+    CATEGORY_COLOR = ['rgb(199, 233, 180)'];
+
+    //console.log(CATEGORY_COLOR);
+    //console.log(NAME_DICT)
 
 }
