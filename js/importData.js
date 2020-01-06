@@ -271,6 +271,7 @@ async function addData(filepath, user, platform, charset){
 
 function onDataAdded(data, filedatas){
     console.log(filedatas);
+    drawCirc(toCircData(filedatas[0]));
     // 具体应该写更新视图之类的东西
 }
 
@@ -291,40 +292,3 @@ addData("./data/微信支付账单(20180101-20180401).csv", "sch");
 
 
 // ============================================================================= //
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
