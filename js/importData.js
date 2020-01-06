@@ -183,7 +183,7 @@ function catData(data) {
     let zhichuks = Object.keys(cats["支出"]);
     data.forEach((d,i)=>{
         if (d.valueLost!=0) {
-            d.dealCat = "其他支出";
+            d.dealCat = "退货损失";
             d.dealCatSub = "退货损失";
         } else if (d.dealType == "收入" && d.aboutRefund) {
             d.dealCat = "退款收入";
