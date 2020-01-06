@@ -81,7 +81,7 @@ function importData(filepath, user, platform, charset){
         // predata.forEach((d,i)=>{
             if (d.timeCreated) {d.timeCreated=new Date(d.timeCreated);};
             if (d.timeModified) {d.timeModified=new Date(d.timeModified);};
-            if (d.timePurchased) {
+            if (d.timePurchased == "") {
                 d.timePurchased=new Date(d.timePurchased);
                 // 如果付款时间为空（支付宝数据会出现），那么以发生时间为参考时间，而微信数据只有付款时间，我们只能用付款时间来做时间参照;
                 if (d.timePurchased.toString()=="Invalid Date") {d.time=d.timeCreated;} else {d.time=d.timePurchased;}
@@ -158,6 +158,7 @@ async function readCats(filepath, charset, old){
 function onCatsReaded(cats){
     // console.log(cats);
     // 具体应该写重新给数据分类什么的
+    updateCategory(cats);
 }
 
 // 将老版单层分类json转换成新版双层json的函数
@@ -270,8 +271,18 @@ async function addData(filepath, user, platform, charset){
 // 在数据真正读取之后回调的函数，这玩意儿应该放在 main.js 里。
 
 function onDataAdded(data, filedatas){
-    console.log(filedatas);
+    // console.log(filedatas);
     // 具体应该写更新视图之类的东西
+    processData(filedatas[0]);
+
+    drawSlider(START_YEAR, END_YEAR);
+    drawCategorySelecter();
+    drawDateSelecter();
+    drawStackChart(ALL_DATA[0].dates.slice(10, 30), [1, 2, 3, 4]);
+
+    //console.log(data.dates);
+    createHeatMap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
+    drawRecordList();
 }
 
 // ============================================================================= //
@@ -281,11 +292,11 @@ function onDataAdded(data, filedatas){
 readCats("./python/cls.json", null, true);
 
 // 读取数据，存入 filedatas，注意，是异步的，有延迟。
-
+/*
 addData("./data/alipay_record_20191226_1649_1.csv", "mx");
 addData("./data/alipay_record_20191225_2224_1.csv", "sch", null, "utf-8");
 addData("./data/微信支付账单(20180101-20180401).csv", "sch");
-
+*/
 // ============================================================================= //
 
 

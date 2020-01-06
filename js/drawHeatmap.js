@@ -8,7 +8,7 @@ function createHeatMap(data, startYear, endYear) {
     var formatColor = d3.scaleQuantize()
         .domain([0, data.maxCount[CURR_CLASS]])
         .range(d3.range(NUMBER_OF_COLORS)
-        .map((d) => `color${CURR_CLASS}-${d}`));
+        .map((d) => `color0-${d}`));
 
 
     var heatmapSvg = d3.select('#js-heatmap').selectAll('svg.heatmap')
@@ -133,7 +133,7 @@ function createHeatMap(data, startYear, endYear) {
         .attr('width', CELL_SIZE)
         .attr('height', CELL_SIZE)
         .attr('x', (d) => d * CELL_SIZE + dx)
-        .attr('class', (d) => `day color${CURR_CLASS}-${d - 1}`);
+        .attr('class', (d) => `day color0-${d - 1}`);
 
 }
 
@@ -145,7 +145,7 @@ function updateHeatmap(data, startYear, endYear) {
     var formatColor = d3.scaleQuantize()
         .domain([0, data.maxCount[CURR_CLASS]])
         .range(d3.range(NUMBER_OF_COLORS)
-            .map((d) => `color${CURR_CLASS}-${d}`));
+            .map((d) => `color0-${d}`));
 
     grid = d3.selectAll('.day').data(data.dates)
         .attr('x', (d) => d3.timeFormat('%U')(new Date(d.date)) * CELL_SIZE)
@@ -155,5 +155,5 @@ function updateHeatmap(data, startYear, endYear) {
     var legendSvg = d3.select('#js-legend')
         .selectAll('rect')
         .data(() => d3.range(7))
-        .attr('class', (d) => `day color${CURR_CLASS}-${d - 1}`);
+        .attr('class', (d) => `day color0-${d - 1}`);
 }

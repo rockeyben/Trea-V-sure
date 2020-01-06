@@ -63,3 +63,94 @@ function randomData(year) {
         maxCount
     };
 }
+
+function  emptyData(year) {
+    var maxCount = 0;
+    var dateTable = [];
+    var format = d3.timeFormat('%Y-%m-%d');
+    var cur_date = new Date(year, 0, 1);
+    var end_date = new Date(year + 1, 0, 1);
+    var maxCount = [];
+    for (c = 0; c < CATEGORY.length; c++) {
+        maxCount.push(0);
+    }
+    while (end_date > cur_date) {
+        date = format(cur_date);
+        info = {};
+        info['date'] = date;
+        info['records'] = [];
+        for(c = 0; c < CATEGORY.length; c++){
+            info[CATEGORY[c]] = 0;
+        }
+        //maxCount[0] = Math.max(maxCount[0], info[CATEGORY[0]]);
+        dateTable.push(info);
+        //console.log(cur_date, end_date)
+        cur_date.setDate(cur_date.getDate() + 1);
+    }
+
+    return {
+        startDate: new Date(year, 0, 1),
+        dates: dateTable,
+        maxCount
+    };
+}
+
+function processData(raw_data){
+    console.log(raw_data);
+    console.log(START_YEAR, END_YEAR);
+    for (i = START_YEAR; i < END_YEAR; i++){
+        console.log(i)
+        ALL_DATA.push(emptyData(i));
+    }
+
+    console.log(ALL_DATA)
+    for (i = 0; i < raw_data.length; i++){
+        record = raw_data[i];
+        var date = record.timeCreated;
+        var year = date.getFullYear();
+        var index = date2index(date);
+        
+        var info = ALL_DATA[year - START_YEAR].dates[index];
+        info['records'].push(record);
+        var cat = record.dealCat;
+        info[cat] += record.value;
+        var cIndex = CATEGORY.indexOf(cat);
+        
+        ALL_DATA[year - START_YEAR].maxCount[cIndex] = Math.max(ALL_DATA[year - START_YEAR].maxCount[cIndex], info[cat]); 
+        
+        // update ALL_DATA array
+        console.log(year, START_YEAR)
+        ALL_DATA[year - START_YEAR].dates[index] = info;
+    }
+}
+
+
+function randomColor() {
+    let r = Math.floor(Math.random() * 256);
+    let g = Math.floor(Math.random() * 256);
+    let b = Math.floor(Math.random() * 256);
+    let rgb = `rgb(${r},${g},${b})`;
+    return rgb;
+}
+
+function updateCategory(cats){
+    console.log(cats);
+    for (var Bkey in cats) {
+        var item = cats[Bkey];
+        for (var Skey in item) {
+            var cat_name = Skey.split("-")[0];
+            if (CATEGORY.indexOf(cat_name) == -1)
+                CATEGORY.push(cat_name);
+        }
+    }
+    console.log(CATEGORY);
+    CATEGORY.forEach(function (d) {
+        var color = randomColor();
+        CATEGORY_COLOR.push(color);
+        NAME_DICT[d] = d;
+    })
+
+    console.log(CATEGORY_COLOR);
+    console.log(NAME_DICT)
+
+}
