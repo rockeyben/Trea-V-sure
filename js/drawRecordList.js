@@ -11,53 +11,93 @@ function drawRecordList(){
     var index = date2index(CURR_DATE);
     var year = CURR_DATE.getFullYear();
     var info = ALL_DATA[year-START_YEAR].dates[index];
-    console.log(info);
+    // console.log(info);
 
     var data = info['records'];
-    /*
-    var selecterSvg = d3.select("#record-list") 
-        .append('svg')
-        .attr('width', $('#record-list').width())
-        .attr('height', 50)
-        .append('g')
-    var date_texts_3 = selecterSvg.selectAll("g")
-        .data(() => d3.range(1))
-        .enter()
-        .append('text')
+    d3.select("#record-list").append('p')
         .text("Current Date:" + d3.timeFormat('%Y-%m-%d')(CURR_DATE))
-        .attr('x', (d) => 30)
-        .attr('y', 0)
-        .attr('dy', 50 - 10)
         .attr('class', 'text-stack-year')
-        .attr('id', 'date_text_3')*/
+        .attr('id', 'date_text_3')
+        ;
+    d3.select("#record-list")
+        .append('table').attr("id", "record-table").attr("class", "table table-bordered")
+        .append('thead')
+        .append('tr').attr("class", "tr-head")
+        ;
+    var thead_tr = d3.select("#record-list > #record-table > thead > tr.tr-head");
+    thead_tr.append('th').text(`timePurchased`);
+    thead_tr.append('th').text(`trader`);
+    thead_tr.append('th').text(`goodName`);
+    thead_tr.append('th').text(`dealType`);
+    thead_tr.append('th').text(`dealCat`);
+    thead_tr.append('th').text(`dealCatSub`);
+    thead_tr.append('th').text(`value`);
+    thead_tr.append('th').text(`user`);
 
-    columns = [{text: '交易时间', sort: TableSort.numeric, sort_column:true},
-        { text: '交易对方', sort: TableSort.alphabetic, sort_column: true},
-        { text: '商品名称', sort: TableSort.alphabetic, sort_column: true},
-        { text: '收入/支出', sort: TableSort.alphabetic, sort_column: true},
-        { text: '主分类', sort: TableSort.alphabetic, sort_column: true},
-        { text: '次分类', sort: TableSort.alphabetic, sort_column: true},
-        { text: '金额', sort: TableSort.numeric, sort_column: true},
-        { text: '用户', sort: TableSort.alphabetic, sort_column: true}]
-    
+    d3.select("#record-list > #record-table").append("tbody");
+
     var data_array = [];
     
     info.records.forEach((d) => {
         data_array.push([d.timePurchased, d.trader, d.goodName, d.dealType, d.dealCat, d.dealCatSub, d.value, d.user]);
     });
 
-    console.log(data_array)
+    // var dimensions = { width: $('#record-list').width(), height: '700px' };
+    // TableSort('#record-list', columns, data_array, dimensions);
 
-    var dimensions = { width: $('#record-list').width(), height: '700px' };
+    data_array.forEach((d)=>{
+        // console.log(d);
+        var tr = d3.select("#record-list #record-table tbody").append('tr').attr('class', 'tr-row');
+        tr.append('td').text(`${d[0]}`);
+        tr.append('td').text(`${d[1]}`);
+        tr.append('td').text(`${d[2]}`);
+        tr.append('td').text(`${d[3]}`);
+        tr.append('td').text(`${d[4]}`);
+        tr.append('td').text(`${d[5]}`);
+        tr.append('td').text(`${d[6]}`);
+        tr.append('td').text(`${d[7]}`);
+    })
 
-    TableSort('#record-list', columns, data_array, dimensions);
+    var sort_direction=1;
+    d3.selectAll('#record-table th').on('click',(e,i)=>{
+        console.log(e);
+        console.log(i);
+        if(sort_direction==1) {
+            sort_direction=-1;
+        }
+        else {
+            sort_direction=1;
+        }
+        // console.log(sort_direction);
+        //获得行数组
+        var trarr=$('#record-table').find('tbody > tr.tr-row').get();
+        //数组排序
+        trarr.sort(function(a, b) {
+            var col1 = $(a).children('td').eq(i).text().toUpperCase();
+            var col2 = $(b).children('td').eq(i).text().toUpperCase();
+            if (!isNaN(Number(col1))&&!isNaN(Number(col2))){
+              return(Number(col1) < Number(col2)) ? -sort_direction: (Number(col1) > Number(col2)) ? sort_direction: 0;
+            }else{
+              return(col1 < col2) ? -sort_direction: (col1 > col2) ? sort_direction: 0;
+            }
+        }
+        );
+        $.each(trarr, function(i, row) {
+            console.log("appending");
+            //将排好序的数组重新填回表格
+            $('#record-table tbody').append(row);
+        }
+        );
+    }
+    );
+
+
+
 }
 
 function removeRecordList() {
-    var recordList = d3.select("#record-list").selectAll("table");
-    recordList.remove();
-    var recordList = d3.select("#record-list").selectAll("svg");
-    recordList.remove();
+    d3.select("#record-list").selectAll("table").remove();
+    d3.select("#record-list").selectAll("p").remove();
 }
 
 

@@ -10,7 +10,7 @@
     <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="css/svg_style.css" rel="stylesheet" type="text/css">
-    <link href="css/d3-tablesort.css" rel="stylesheet" type="text/css">
+    <!-- <link href="css/d3-tablesort.css" rel="stylesheet" type="text/css"> -->
     <style type="text/css">
         body{background: #eee;}
         .container.main{background: #fff;}
@@ -20,7 +20,6 @@
 </head>
 
 <body>
-    
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -28,14 +27,19 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         <a class="navbar-brand" href="#">Trea-V-sure</a>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-          <li class="nav-item">
+          <li class="nav-item" id="tab-datas">
             <a class="nav-link" href="#">数据<span class="span-nav-desc"> (当前：样例.csv)</span></a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item active" id="tab-views">
             <a class="nav-link" href="#">视图<span class="sr-only span-nav-desc"> (当前页面)</span></a>
           </li>
           <li class="nav-item">
             <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">选项<span class="span-nav-desc"> (暂未开放)</span></a>
+          </li>
+        </ul>
+        <ul class="navbar-nav mt-2 mt-lg-0">
+          <li class="nav-item" id="tab-about">
+            <a class="nav-link" href="#">关于</a>
           </li>
         </ul><!-- 
         <form class="form-inline my-2 my-lg-0">
@@ -44,8 +48,7 @@
         </form> -->
       </div>
     </nav>
-    
-    
+
 
     <div class="container my-5 py-5 main" id="main-views">
         <div class="row" id="wrap-heatmap">
@@ -57,7 +60,6 @@
                     <div id="js-heatmap"></div>
                     <div id="js-months"></div>
                     <div id="js-legend"></div>
-                    
                 </div>
             </div>
         </div>
@@ -78,17 +80,31 @@
     </div>
 
 
-    <div class="container my-5 py-5 main" id="main-datas">
-        <div class="filePicker">
-            <label>导入支付宝或微信文件</label>
-            <input id="fileInput" type="file" name="file" multiple="multiple" accept=".csv,.CSV" />
-            <input id="btn_add" type="button" name="btn_add" value="执行增加" />
-            <input id="btn_update" type="button" name="btn_update" value="执行更改" />
+    <div class="container my-5 py-5 main hidden" id="main-datas">
+        <div class="row">
+            <div class="col">
+                <div class="filePicker">
+                    <label>导入支付宝或微信文件</label>
+                    <input id="fileInput" type="file" name="file" multiple="multiple" accept=".csv,.CSV" />
+                    <input id="btn_add" type="button" name="btn_add" value="执行增加" />
+                    <input id="btn_update" type="button" name="btn_update" value="执行更改" />
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="tooltip"></div>
 
+    <div class="container my-5 py-5 main hidden" id="main-about">
+        <div class="row">
+            <div class="col">
+                <h2>欢迎使用 <code>Trea-V-sure</code> —— 你的专属账单可视化工具！</h2>
+                <p>　　内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="tooltip"></div>
 
 
     <!-- <footer class="bg-light pt-4 pb-2">
@@ -101,7 +117,7 @@
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script type="text/javascript" src="lib/jquery.min.js"></script>
-    <script type="text/javascript" src="lib/d3-tablesort.js"></script>
+    <!-- <script type="text/javascript" src="lib/d3-tablesort.js"></script> -->
     <script type="text/javascript" src="lib/d3-simple-slider.min.js"></script>
     <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
@@ -114,7 +130,6 @@
     <script type="text/javascript" src="js/drawSlider.js"></script>
     <script type="text/javascript" src="js/drawCategorySelecter.js"></script>
     <script type="text/javascript" src="js/drawRecordList.js"></script>
-    <script type="text/javascript" src="js/importData.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 
@@ -139,6 +154,27 @@
             }
         }
 
+
+
+
+        d3.select("#tab-datas").on('click',()=>{
+            d3.selectAll(".nav-item").classed("active", false);
+            d3.select("#tab-datas").classed("active", true);
+            d3.selectAll(".main").classed("hidden", true);
+            d3.select("#main-datas").classed("hidden", false);
+        })
+        d3.select("#tab-views").on('click',()=>{
+            d3.selectAll(".nav-item").classed("active", false);
+            d3.select("#tab-views").classed("active", true);
+            d3.selectAll(".main").classed("hidden", true);
+            d3.select("#main-views").classed("hidden", false);
+        })
+        d3.select("#tab-about").on('click',()=>{
+            d3.selectAll(".nav-item").classed("active", false);
+            d3.select("#tab-about").classed("active", true);
+            d3.selectAll(".main").classed("hidden", true);
+            d3.select("#main-about").classed("hidden", false);
+        })
     </script>
 
 
