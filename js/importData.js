@@ -35,6 +35,88 @@
 
 // ============================================================================= //
 
+function praseData(datatext, user, platform, charset){
+    let notdatas = platform=="alipay" ? datatext.split("\r\n").slice(5, -8) : datatext.split("\r\n").slice(17);
+    let tablehead_alipay = "tradeID,orderID,timeCreated,timePurchased,timeModified,tradeSource,tradeType,trader,goodName,value,dealType,stateTrade,serviceFee,valueRefund,note,stateCapital";
+    let tablehead_wechat = "timePurchased,tradeType,trader,goodName,dealType,value,dealMethod,stateTrade,tradeID,orderID,note";
+    let tablehead = platform=="alipay" ? tablehead_alipay : tablehead_wechat ;
+    notdatas.unshift(tablehead);
+    let rawdata = notdatas.join("\r\n");
+    let predata = d3.csvParse(rawdata);
+
+    // 预处理————;
+
+    let ks = Object.keys(predata[0]);
+    // 删掉首尾空格，增加必要的用户、数据来源、序号等字段
+    predata.forEach((d,i)=>{
+        for( let k in ks ){
+            if (typeof(d[ks[k]])=='string') {d[ks[k]]=d[ks[k]].trim();};
+        }
+        d.user = user;
+        d.dataSource = platform;
+        d.idx = i;
+        d.valueLost = 0;
+        d.aboutRefund = false;
+        d.keyword = "";
+        if (d.dataSource=="alipay") {d.dealMethod="";};//如果是支付宝数据，增加空的“交易方式”字段，来和微信数据对应，免得后期处理时出问题。
+    // });
+
+    // 把金额改成数字类型
+    // predata.forEach((d,i)=>{
+        if (typeof(d.value)=='string'&&d.value.slice(0,1)=="¥") {
+            d.value=Number(d.value.slice(1).trim());
+        } else if (typeof(d.value)=='string') {d.value=Number(d.value.trim());};
+        if (typeof(d.valueRefund)=='string') {d.valueRefund=Number(d.valueRefund.trim());};
+        if (typeof(d.serviceFee)=='string') {d.serviceFee=Number(d.serviceFee.trim());};
+    // });
+
+    // 把时间改成时间类型
+    // predata.forEach((d,i)=>{
+        if (d.timeCreated) {d.timeCreated=new Date(d.timeCreated);};
+        if (d.timeModified) {d.timeModified=new Date(d.timeModified);};
+        if (d.timePurchased == "") {
+            d.timePurchased=new Date(d.timePurchased);
+            // 如果付款时间为空（支付宝数据会出现），那么以发生时间为参考时间，而微信数据只有付款时间，我们只能用付款时间来做时间参照;
+            if (d.timePurchased.toString()=="Invalid Date") {d.time=d.timeCreated;} else {d.time=d.timePurchased;}
+        };
+    });
+
+    let tempIDs=[];
+    // 将涉及到退款的订单号都放进一个数组
+    predata.forEach((d,i)=>{
+        if ((d.goodName.slice(0,2)=="退款")||(d.dataSource=="alipay"&&Number(d.valueRefund)!=0)) {
+            d.aboutRefund = true;
+            if (d.stateTrade=="交易关闭") {
+                // 计算损失金额
+                let valueLost = Math.round(100*(d.value-d.valueRefund))/100;
+                if (valueLost!=0) {d.valueLost = valueLost;};
+            };
+            tempIDs.push(d.orderID);
+        };
+    });
+
+    // 去重
+    let tuikuanIDs = [];
+    for(let j in tempIDs){
+        if(tuikuanIDs.indexOf(tempIDs[j]) == -1)
+            tuikuanIDs.push(tempIDs[j]);
+    };
+    // console.log(tuikuanIDs);
+
+    predata.forEach((d,i)=>{
+        let x = tuikuanIDs.indexOf(d.orderID);
+        if(x != -1) {
+            // console.log(`【${i}】【${x}】【${d.stateTrade}】【${d.orderID}】【${d.goodName}】【${d.value}】【${d.valueRefund}】`);
+        };
+    });
+
+    return predata;
+}
+
+
+
+// ============================================================================= //
+
 // 导入支付宝或微信数据
 
 function importData(filepath, user, platform, charset){
@@ -49,79 +131,7 @@ function importData(filepath, user, platform, charset){
     return fetch(filepath)
     .then(response => response.arrayBuffer()  )
     .then(buffer => new TextDecoder(charset).decode(buffer)  )
-    .then(notdata => platform=="alipay" ? notdata.split("\r\n").slice(5, -8) : notdata.split("\r\n").slice(17)  )
-    .then(notdata => {notdata.unshift(tablehead); return notdata}  )
-    .then(notdatas => notdatas.join("\r\n")  )
-    .then(rawdata => d3.csvParse(rawdata)  )
-    .then(predata => {// 预处理;
-
-        let ks = Object.keys(predata[0]);
-        // 删掉首尾空格，增加必要的用户、数据来源、序号等字段
-        predata.forEach((d,i)=>{
-            for( let k in ks ){
-                if (typeof(d[ks[k]])=='string') {d[ks[k]]=d[ks[k]].trim();};
-            }
-            d.user = user;
-            d.dataSource = platform;
-            d.idx = i;
-            d.valueLost = 0;
-            d.aboutRefund = false;
-            d.keyword = "";
-            if (d.dataSource=="alipay") {d.dealMethod="";};//如果是支付宝数据，增加空的“交易方式”字段，来和微信数据对应，免得后期处理时出问题。
-        // });
-
-        // 把金额改成数字类型
-        // predata.forEach((d,i)=>{
-            if (typeof(d.value)=='string'&&d.value.slice(0,1)=="¥") {
-                d.value=Number(d.value.slice(1).trim());
-            } else if (typeof(d.value)=='string') {d.value=Number(d.value.trim());};
-            if (typeof(d.valueRefund)=='string') {d.valueRefund=Number(d.valueRefund.trim());};
-            if (typeof(d.serviceFee)=='string') {d.serviceFee=Number(d.serviceFee.trim());};
-        // });
-
-        // 把时间改成时间类型
-        // predata.forEach((d,i)=>{
-            if (d.timeCreated) {d.timeCreated=new Date(d.timeCreated);};
-            if (d.timeModified) {d.timeModified=new Date(d.timeModified);};
-            if (d.timePurchased == "") {
-                d.timePurchased=new Date(d.timePurchased);
-                // 如果付款时间为空（支付宝数据会出现），那么以发生时间为参考时间，而微信数据只有付款时间，我们只能用付款时间来做时间参照;
-                if (d.timePurchased.toString()=="Invalid Date") {d.time=d.timeCreated;} else {d.time=d.timePurchased;}
-            };
-        });
-
-        let tempIDs=[];
-        // 将涉及到退款的订单号都放进一个数组
-        predata.forEach((d,i)=>{
-            if ((d.goodName.slice(0,2)=="退款")||(d.dataSource=="alipay"&&Number(d.valueRefund)!=0)) {
-                d.aboutRefund = true;
-                if (d.stateTrade=="交易关闭") {
-                    // 计算损失金额
-                    let valueLost = Math.round(100*(d.value-d.valueRefund))/100;
-                    if (valueLost!=0) {d.valueLost = valueLost;};
-                };
-                tempIDs.push(d.orderID);
-            };
-        });
-
-        // 去重
-        let tuikuanIDs = [];
-        for(let j in tempIDs){
-            if(tuikuanIDs.indexOf(tempIDs[j]) == -1)
-                tuikuanIDs.push(tempIDs[j]);
-        };
-        // console.log(tuikuanIDs);
-
-        predata.forEach((d,i)=>{
-            let x = tuikuanIDs.indexOf(d.orderID);
-            if(x != -1) {
-                // console.log(`【${i}】【${x}】【${d.stateTrade}】【${d.orderID}】【${d.goodName}】【${d.value}】【${d.valueRefund}】`);
-            };
-        });
-
-        return predata;
-    })
-    // .then(data => catData(data))
+    .then(datatext => praseData(datatext, user, platform, charset)  );
 }
 
 // ============================================================================= //
@@ -270,6 +280,13 @@ async function addData(filepath, user, platform, charset){
         console.log(e);
         throw e;
     }
+}
+
+function addUserData(datatext, user, platform, charset){
+    var data = praseData(datatext, user, platform, charset);
+    data = catData(data);
+    filedatas.push(data);
+    onDataAdded(data, filedatas);// 回调函数
 }
 
 // 在数据真正读取之后回调的函数，这玩意儿应该放在 main.js 里。

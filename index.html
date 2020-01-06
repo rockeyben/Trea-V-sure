@@ -149,7 +149,9 @@
                 var reader = new FileReader();
                 reader.readAsText(file,"GBK");
                 reader.onload = function(evt) {
-                    console.log(this.result);
+                    console.log("正在读取！");
+                    addUserData(this.result, "adgarh", null)
+                    console.log("读取完毕！");
                 };
             }
         }
