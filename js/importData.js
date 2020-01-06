@@ -20,6 +20,7 @@
 // d.idx                数据在当前文件中的序号（这个可能在多文件的数据里不太实用）
 // d.aboutRefund        是否涉及到退款（本身是退款，或者交易关闭当即退款，或者后期有退款）
 // d.valueLost          在退款等情况中损失的金额
+// d.keyword            识别分类时采用的关键字
 // 次要字段：
 // d.timePurchased      付款时间（支付宝有些是空的，所以改用上面的`d.time`）
 // 仅微信数据带的字段：
@@ -65,6 +66,7 @@ function importData(filepath, user, platform, charset){
             d.idx = i;
             d.valueLost = 0;
             d.aboutRefund = false;
+            d.keyword = "";
             if (d.dataSource=="alipay") {d.dealMethod="";};//如果是支付宝数据，增加空的“交易方式”字段，来和微信数据对应，免得后期处理时出问题。
         // });
 
@@ -196,6 +198,7 @@ function catData(data) {
                 for (let w in ws) {
                     if (d.goodName.search(ws[w]) != -1 || d.trader.search(ws[w]) != -1) {
                         ink = true;
+                        d.keyword = ws[w];
                     }
                 }
                 if (ink) {
@@ -222,6 +225,7 @@ function catData(data) {
                 for (let w in ws) {
                     if (d.goodName.search(ws[w]) != -1 || d.trader.search(ws[w]) != -1) {
                         ink = true;
+                        d.keyword = ws[w];
                     }
                 }
                 if (ink) {
