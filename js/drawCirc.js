@@ -10,6 +10,75 @@ function updateCircData(val, ind){
   b[ind[ind.length-1]].size += val;
 }
 
+
+function toCircData(data){
+  var refTree = {"name" : "circData", "children" : []};
+  for (var ind in data){
+      var d = data[ind];
+      if(d.dealType == ""){
+        continue;
+      }
+      var cont = true;
+      var id = 0;
+      for (var zd in refTree.children){
+        var z = refTree.children[zd];
+        if (z.name == d.dealType){
+          cont = false;
+          break;
+        }
+        id++;
+      }
+      if (cont){
+        refTree.children.push({"name" : d.dealType , "children" : []});
+      }
+      var cont = true;
+      var idx = 0;
+      for (var zd in refTree.children[id].children){
+        var z = refTree.children[id].children[zd];
+        if (z.name == d.dealCat){
+          cont = false;
+          break;
+        }
+        idx++;
+      }
+      if(cont){
+        refTree.children[id].children.push({"name" : d.dealCat , "children" : []});
+      }
+      var cont = true;
+      var idy = 0;
+      for (var zd in refTree.children[id].children[idx].children){
+        var z = refTree.children[id].children[idx].children[zd];
+        if (z.name == d.dealCatSub){
+          cont = false;
+          break;
+        }
+        idy++;
+      }
+      if(cont){
+        refTree.children[id].children[idx].children.push({"name" : d.dealCatSub, "children": []})
+      }
+      var cont = true;
+      var idz = 0;
+      for (var zd in refTree.children[id].children[idx].children[idy].children){
+        var z = refTree.children[id].children[idx].children[idy].children[zd];
+        if (z.name == d.keyword){
+          cont = false;
+          break;
+        }
+        idz++;
+      }
+      if(cont){
+        refTree.children[id].children[idx].children[idy].children.push({"name" : d.keyword, "size": d.value})
+      }
+      else {
+        refTree.children[id].children[idx].children[idy].children[idz].size += d.value;
+      }
+    }
+  console.log(refTree);
+  return refTree;
+}
+
+/*
 function toCircData(data){
   console.log(data);
   var refTree = {"name" : "circData", "children" : []};
@@ -83,6 +152,7 @@ function toCircData(data){
   console.log(refTree);
   return refTree;
 }
+*/
 
 /*
 function toCircData(data){
@@ -199,8 +269,8 @@ function drawCirc(data){
 
       const svg = d3.select('#partitionSVG')
               .style("width", "100%")
-              .style("height", "auto")
-              .style("font", "9px sans-serif");
+              .style("height", "auto");
+              //.style("font", "9px sans-serif");
 
       const g = svg.append("g")
                    .attr("transform", `translate(${width / 2},${width / 2})`);

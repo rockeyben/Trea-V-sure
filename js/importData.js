@@ -274,8 +274,7 @@ async function addData(filepath, user, platform, charset){
 // 在数据真正读取之后回调的函数，这玩意儿应该放在 main.js 里。
 
 function onDataAdded(data, filedatas){
-    console.log(filedatas);
-    drawCirc(toCircData(filedatas[0]));
+    drawCirc(toCircData(data));
     // 具体应该写更新视图之类的东西
 }
 
@@ -287,9 +286,9 @@ readCats("./python/cls.json", null, true);
 
 // 读取数据，存入 filedatas，注意，是异步的，有延迟。
 
-addData("./data/alipay_record_20191226_1649_1.csv", "mx");
+//addData("./data/alipay_record_20191226_1649_1.csv", "mx");
 addData("./data/alipay_record_20191225_2224_1.csv", "sch", null, "utf-8");
-addData("./data/微信支付账单(20180101-20180401).csv", "sch");
+//addData("./data/微信支付账单(20180101-20180401).csv", "sch");
 
 // ============================================================================= //
 
