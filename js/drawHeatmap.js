@@ -88,6 +88,7 @@ function createHeatMap(data, startYear, endYear) {
                 updateDateText1();
                 updateDateText2();
                 updateStackChart();
+                updateCirc();
                 IS_SELECTING = 0;
             }
 

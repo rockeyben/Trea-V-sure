@@ -14,6 +14,7 @@ function drawRecordList(){
     console.log(info);
 
     var data = info['records'];
+    /*
     var selecterSvg = d3.select("#record-list") 
         .append('svg')
         .attr('width', $('#record-list').width())
@@ -28,16 +29,16 @@ function drawRecordList(){
         .attr('y', 0)
         .attr('dy', 50 - 10)
         .attr('class', 'text-stack-year')
-        .attr('id', 'date_text_3')
+        .attr('id', 'date_text_3')*/
 
-    columns = [{text: '交易时间', sort: TableSort.numeric},
-        {text: '交易对方', sort: TableSort.alphabetic},
-        {text: '商品名称', sort: TableSort.alphabetic},
-        {text: '收入/支出', sort: TableSort.alphabetic},
-        {text: '主分类', sort: TableSort.alphabetic},
-        {text: '次分类', sort: TableSort.alphabetic},
-        {text: '金额', sort: TableSort.numeric},
-        {text: '用户', sort: TableSort.alphabetic}]
+    columns = [{text: '交易时间', sort: TableSort.numeric, sort_column:true},
+        { text: '交易对方', sort: TableSort.alphabetic, sort_column: true},
+        { text: '商品名称', sort: TableSort.alphabetic, sort_column: true},
+        { text: '收入/支出', sort: TableSort.alphabetic, sort_column: true},
+        { text: '主分类', sort: TableSort.alphabetic, sort_column: true},
+        { text: '次分类', sort: TableSort.alphabetic, sort_column: true},
+        { text: '金额', sort: TableSort.numeric, sort_column: true},
+        { text: '用户', sort: TableSort.alphabetic, sort_column: true}]
     
     var data_array = [];
     
@@ -45,10 +46,11 @@ function drawRecordList(){
         data_array.push([d.timePurchased, d.trader, d.goodName, d.dealType, d.dealCat, d.dealCatSub, d.value, d.user]);
     });
 
+    console.log(data_array)
+
     var dimensions = { width: $('#record-list').width(), height: '700px' };
 
     TableSort('#record-list', columns, data_array, dimensions);
-
 }
 
 function removeRecordList() {
