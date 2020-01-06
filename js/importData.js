@@ -81,7 +81,7 @@ function importData(filepath, user, platform, charset){
         // predata.forEach((d,i)=>{
             if (d.timeCreated) {d.timeCreated=new Date(d.timeCreated);};
             if (d.timeModified) {d.timeModified=new Date(d.timeModified);};
-            if (d.timePurchased) {
+            if (d.timePurchased=="") {
                 d.timePurchased=new Date(d.timePurchased);
                 // 如果付款时间为空（支付宝数据会出现），那么以发生时间为参考时间，而微信数据只有付款时间，我们只能用付款时间来做时间参照;
                 if (d.timePurchased.toString()=="Invalid Date") {d.time=d.timeCreated;} else {d.time=d.timePurchased;}
