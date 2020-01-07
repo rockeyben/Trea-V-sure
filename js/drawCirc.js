@@ -295,7 +295,7 @@ function drawCirc(data){
                       }
                       else{
                         while (d.depth > 3) { d = d.parent; }
-                        console.log(subColor(d))
+                        //console.log(subColor(d))
                         return subColor(d);
                       }
                     })
@@ -377,7 +377,7 @@ function updateCirc() {
     var selected_range = ALL_DATA[CURR_YEAR - START_YEAR].dates.slice(s_i, e_i);
     var json_format = [];
     selected_range.forEach((d) => {
-        console.log(d)
+        //console.log(d)
         if (d.records.length > 0)
           json_format = json_format.concat(d.records);
     })

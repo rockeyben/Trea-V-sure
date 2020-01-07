@@ -474,12 +474,15 @@ function onDataAdded(data_in, filedatas, filedetials){
     drawSlider(START_YEAR, END_YEAR);
     drawCategorySelecter();
     
+    
     //drawCheckBox(CATEGORY);
     drawDateSelecter();
     drawStackChart(ALL_DATA[0].dates.slice(10, 30), [1, 2, 3, 4]);
 
     //console.log(data.dates);
     createHeatMap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
+
+    selectAllCategory();
     //drawRecordList();
 }
 

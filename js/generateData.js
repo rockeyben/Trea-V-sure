@@ -119,7 +119,7 @@ function processData(raw_data){
         ALL_DATA[year - START_YEAR].maxCount[cIndex] = Math.max(ALL_DATA[year - START_YEAR].maxCount[cIndex], info[cat]); 
         
         // update ALL_DATA array
-        console.log(year, START_YEAR)
+        //console.log(year, START_YEAR)
         ALL_DATA[year - START_YEAR].dates[index] = info;
     }
 }
@@ -144,7 +144,7 @@ function updateCategory(cats){
         }
     }
     //console.log(CATEGORY);
-    CATEGORY.forEach(function (d) {
+    CATEGORY.forEach(function (d, i) {
         NAME_DICT[d] = d;
     })
 

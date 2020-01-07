@@ -17,7 +17,7 @@ function createHeatMap(data, startYear, endYear) {
     });
     
     var formatColor = d3.scaleQuantize()
-        .domain([0, upBound])
+        .domain([0, 5])
         .range(d3.range(NUMBER_OF_COLORS)
         .map((d) => `color0-${d}`));
 
@@ -50,7 +50,7 @@ function createHeatMap(data, startYear, endYear) {
 
 
 
-    console.log(dates)
+    //console.log(dates)
     rect.selectAll('.day')
         // The heatmap will contain all the days in that year.
         .data(dates)
@@ -64,11 +64,11 @@ function createHeatMap(data, startYear, endYear) {
         .attr('date', (d) => d.date)
         // Add the colors to the grids.
         .attr('class', function(d) { 
-                console.log(upBound, d.count)
+                //console.log(upBound, d.count)
                 if(upBound == 0 || d.count == 0)
                     return `${gridClass} #eee`
                 else
-                    return `${gridClass} ${formatColor(d.count)}`
+                    return `${gridClass} ${formatColor(Math.log10(d.count))}`
             })
         .on('click', function (d) {
             //console.log(IS_SELECTING)
@@ -172,7 +172,7 @@ function updateHeatmap(data, startYear, endYear) {
 
     var gridClass = 'js-date-grid day';
     var formatColor = d3.scaleQuantize()
-        .domain([0, upBound])
+        .domain([0, 5])
         .range(d3.range(NUMBER_OF_COLORS)
             .map((d) => `color0-${d}`));
     //console.log(data.maxCount[CURR_CLASS])
@@ -185,7 +185,7 @@ function updateHeatmap(data, startYear, endYear) {
             if (upBound == 0 || d.count == 0)
                 return `${gridClass} #eee`
             else
-                return `${gridClass} ${formatColor(d.count)}`
+                return `${gridClass} ${formatColor(Math.log10(d.count))}`
         })
     var legendSvg = d3.select('#js-legend')
         .selectAll('rect')

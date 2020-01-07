@@ -36,20 +36,7 @@ function drawCategorySelecter(){
             }
             else if(d == CATEGORY.length){
                 // select all
-                CURR_CLASS = [];
-                for(cc = 0; cc < CATEGORY.length; cc++)
-                    CURR_CLASS.push(cc);
-                var all_rects = d3.select("#category-selecter").selectAll("rect");
-                all_rects.style('fill', (d)=>{
-                    //console.log(d);
-                    if (d < CATEGORY.length)
-                        return CATEGORY_COLOR[0];
-                    else
-                        return '#eee';                    
-                })
-                //console.log(CURR_CLASS);
-                updateHeatmap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
-                updateStackChart();
+                selectAllCategory();
             }
             else if(d == CATEGORY.length + 1){
                 // clean all
@@ -187,6 +174,19 @@ function updateDateText2() {
     text2.text(d3.timeFormat('%Y-%m-%d')(STACK_END_DATE))
 }
 
-function updateColor() {
-    
+function selectAllCategory() {
+    CURR_CLASS = [];
+    for (cc = 0; cc < CATEGORY.length; cc++)
+        CURR_CLASS.push(cc);
+    var all_rects = d3.select("#category-selecter").selectAll("rect");
+    all_rects.style('fill', (d) => {
+        //console.log(d);
+        if (d < CATEGORY.length)
+            return CATEGORY_COLOR[0];
+        else
+            return '#eee';
+    })
+    //console.log(CURR_CLASS);
+    updateHeatmap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
+    updateStackChart();
 }
