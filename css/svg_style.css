@@ -7,6 +7,18 @@ svg {
   shape-rendering: crispEdges;
 }
 
+#record-list #record-table tbody tr {
+  color: #888;
+}
+
+#record-list #record-table tbody tr.tr-outcome {
+  color: #800;
+}
+
+#record-list #record-table tbody tr.tr-income {
+  color: #080;
+}
+
 #data-overview, #files-overview, #record-list {
   overflow: auto;
 }

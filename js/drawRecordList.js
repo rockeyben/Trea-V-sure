@@ -15,7 +15,7 @@ function drawRecordList(){
 
     var data = info['records'];
     d3.select("#record-list").append('p')
-        .text("Current Date:" + d3.timeFormat('%Y-%m-%d')(CURR_DATE))
+        .text(`以下是 ${d3.timeFormat('%Y-%m-%d')(CURR_DATE)} 的数据：`)
         .attr('class', 'text-stack-year')
         .attr('id', 'date_text_3')
         ;
@@ -48,6 +48,11 @@ function drawRecordList(){
     data_array.forEach((d)=>{
         // console.log(d);
         var tr = d3.select("#record-list #record-table tbody").append('tr').attr('class', 'tr-row');
+        if (d[3]=="收入") {
+            tr.classed("tr-income", true);
+        } else if (d[3]=="支出") {
+            tr.classed("tr-outcome", true);
+        };
         tr.append('td').text(`${d[0]}`);
         tr.append('td').text(`${d[1]}`);
         tr.append('td').text(`${d[2]}`);
