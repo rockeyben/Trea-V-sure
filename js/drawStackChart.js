@@ -3,7 +3,7 @@ function drawStackChart(data, order) {
         data : list within a certain range, say 30 days
     */
     var margin = { top: 20, right: 20, bottom: 40, left: 40 },
-        width = 500,
+        width = 700,
         height = 500;
     //console.log(data[0].date, data[data.length - 1].date)
     var x = d3.scaleTime()

@@ -98,14 +98,16 @@ function drawCategorySelecter(){
 
 function drawDateSelecter(){
     var dx = 20;
-    var button_size = 50;
+    var button_height = 50;
     var button_width = 80*2;
-    var width = (button_width + dx) * 2;
-    var height = button_size;
+
+    var width = (button_width + dx) * 2,
+        height= button_height,
+        margin= {top: 12, right: 12, bottom:12, left:12};
     var selecterSvg = d3.select('#date-selecter')
         .append('svg')
-        .attr('width', $('#date-selecter').width())
-        .attr('height', height)
+        .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
+                    +(height + margin.top + margin.bottom).toString()+"")
         .append('g')
 
     var selecterRects = selecterSvg.selectAll('g')
@@ -113,7 +115,7 @@ function drawDateSelecter(){
         .enter()
         .append('rect')
         .attr('width', button_width)
-        .attr('height', button_size)
+        .attr('height', button_height)
         .attr('x', (d) => (button_width + dx) * d)
         .attr('y', 0)
         .style('fill', 'gray')
@@ -150,7 +152,7 @@ function drawDateSelecter(){
         })
         .attr('x', (d) => (button_width + dx) * d + 5)
         .attr('y', 0)
-        .attr('dy', button_size - 10)
+        .attr('dy', button_height - 10)
         .attr('class', 'text-category')
 
     
@@ -161,7 +163,7 @@ function drawDateSelecter(){
         .text(d3.timeFormat('%Y-%m-%d')(STACK_START_DATE))
         .attr('x', (d) => (button_width + dx) * (d + 1.5) + 5)
         .attr('y', 0)
-        .attr('dy', button_size - 10)
+        .attr('dy', button_height - 10)
         .attr('class', 'text-stack-year')
         .attr('id', 'date_text_1')
 
@@ -172,7 +174,7 @@ function drawDateSelecter(){
         .text(d3.timeFormat('%Y-%m-%d')(STACK_END_DATE))
         .attr('x', (d) => (button_width + dx) * (d + 2.5) + 5)
         .attr('y', 0)
-        .attr('dy', button_size - 10)
+        .attr('dy', button_height - 10)
         .attr('class', 'text-stack-year')
         .attr('id', 'date_text_2')
 }

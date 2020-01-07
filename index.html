@@ -95,10 +95,16 @@
 
 
     <div class="container my-5 py-5 main" id="main-views">
+        <div class="row">
+            <div class="col-md-7 col-sm-12" id="wrap-stark">
+                <div id="tip-trend"></div>
+            </div>
+            <div class="col-md-5 col-sm-12" id="wrap-circ">
+                <div class="circle-tree-graph"><svg id="partitionSVG" viewBox="0 0 932 932"></svg></div>
+            </div>
+        </div>
+        <hr />
         <div class="row" id="wrap-heatmap">
-            <div class="col-md-6 col-sm-12" id='category-selecter'></div>
-            <div class="col-md-6 col-sm-12" id='slider-time'></div>
-            <div class="col-12" id='date-selecter'></div>
             <div class="col-12" id='wrap-heatmap-themap'>
                 <div id="results">
                     <div id="js-heatmap"></div>
@@ -106,15 +112,9 @@
                     <div id="js-legend"></div>
                 </div>
             </div>
-        </div>
-        <hr />
-        <div class="row">
-            <div class="col-md-6 col-sm-12" id="wrap-stark">
-                <div id="tip-trend"></div>
-            </div>
-            <div class="col-md-6 col-sm-12" id="wrap-circ">
-                <div class="circle-tree-graph"><svg id="partitionSVG" viewBox="0 0 932 932"></svg></div>
-            </div>
+            <div class="col-md-6 col-sm-12" id='slider-time'></div>
+            <div class="col-md-6 col-sm-12" id='date-selecter'></div>
+            <div class="col-12" id='category-selecter'></div>
         </div>
         <hr />
         <div class="row">
