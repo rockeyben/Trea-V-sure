@@ -198,7 +198,7 @@ function drawDateSelecter(){
             if (IS_SELECTING == 0){
                 IS_SELECTING = 1;
                 d3.select('#date-selecter-btn')
-                    .text('请在图中点击开始日期');
+                    .text('请在图中点击');
                 d3.select('#date_text_1')
                     .text('开始：[请在图中点击开始日期]；');
                 d3.select('#date_text_2')
