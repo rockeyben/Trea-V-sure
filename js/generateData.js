@@ -98,6 +98,8 @@ function  emptyData(year) {
 function processData(raw_data){
 
     ALL_DATA = [];
+    START_YEAR = 10000;
+    END_YEAR = 0;
 
     for (i = 0; i < raw_data.length; i++) {
         var date = raw_data[i].time;

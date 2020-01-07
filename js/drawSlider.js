@@ -1,5 +1,7 @@
 function drawSlider(start_year, end_year){
 
+    if (end_year==start_year) {end_year+=1;};
+
     var width = 450,
         height= 60,
         margin= {top: 30, right: 60, bottom:30, left:60};
