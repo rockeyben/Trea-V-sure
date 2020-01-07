@@ -100,7 +100,7 @@ function processData(raw_data){
     ALL_DATA = [];
 
     for (i = 0; i < raw_data.length; i++) {
-        var date = raw_data[i].timeCreated;
+        var date = raw_data[i].time;
         var year = date.getFullYear();
         
         START_YEAR = Math.min(START_YEAR, year);
@@ -123,7 +123,7 @@ function processData(raw_data){
     //console.log(ALL_DATA)
     for (i = 0; i < raw_data.length; i++){
         record = raw_data[i];
-        var date = record.timeCreated;
+        var date = record.time;
         var year = date.getFullYear();
         var index = date2index(date);
         
