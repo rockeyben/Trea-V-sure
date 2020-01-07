@@ -96,14 +96,29 @@ function  emptyData(year) {
 }
 
 function processData(raw_data){
-    console.log(raw_data);
+
+    for (i = 0; i < raw_data.length; i++) {
+        var date = raw_data[i].timeCreated;
+        var year = date.getFullYear();
+        
+        START_YEAR = Math.min(START_YEAR, year);
+        END_YEAR = Math.max(END_YEAR, year);
+        //console.log(START_YEAR, END_YEAR);
+    }
+    CURR_YEAR = START_YEAR;
+
+    STACK_START_DATE = new Date(CURR_YEAR, 0, 1);
+    STACK_END_DATE = new Date(CURR_YEAR, 11, 30);
+    CURR_DATE = new Date(CURR_YEAR, 0, 1);
     console.log(START_YEAR, END_YEAR);
-    for (i = START_YEAR; i < END_YEAR; i++){
+    for (i = START_YEAR; i <= END_YEAR; i++){
         console.log(i)
         ALL_DATA.push(emptyData(i));
     }
 
-    console.log(ALL_DATA)
+
+
+    //console.log(ALL_DATA)
     for (i = 0; i < raw_data.length; i++){
         record = raw_data[i];
         var date = record.timeCreated;
