@@ -7,6 +7,12 @@ svg {
   shape-rendering: crispEdges;
 }
 
+#data-overview, #files-overview, #record-list {
+  overflow: auto;
+}
+
+
+
 .day {
   fill: #eee;
   stroke: #fff;
@@ -184,8 +190,3 @@ svg {
   left:0;
 }
 
-
-
-table{
-  width: 100%;
-}

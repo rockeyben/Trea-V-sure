@@ -339,7 +339,7 @@ async function addData(filepath, user, platform, charset){
         var data = await importData(filepath, user, platform, charset);
         data = catData(data);
         filedatas.push(data);
-        onDataAdded(data, filedatas, filedetials);// 回调函数
+        onDataAdded();// 回调函数
     } catch (e) {
         console.log("some error happend in addData()");
         console.log(e);
@@ -352,7 +352,7 @@ function addUserData(datatext, user, platform, charset){
     data = catData(data);
     filedatas.push(data);
     d3.select("#tab-datas > a.nav-link > span.span-nav-desc").text("")
-    onDataAdded(data, filedatas, filedetials);// 回调函数
+    onDataAdded();// 回调函数
 }
 
 function removeData(x){
@@ -415,7 +415,7 @@ function printData(data){
 
 // 在数据真正读取之后回调的函数，这玩意儿应该放在 main.js 里。
 
-function onDataAdded(data_in, filedatas, filedetials){
+function onDataAdded(){
     d3.select("#files-overview > #files-overview-table").remove();
     d3.select("#files-overview")
         .append('table').attr("id", "files-overview-table").attr("class", "table table-bordered")
@@ -447,16 +447,18 @@ function onDataAdded(data_in, filedatas, filedetials){
         tr.append('td').append('input')
             .attr("type",`checkbox`)
             .attr("id",`file-selected-${i}`)
-            .attr("checked",`${f.selected ? true : false}`)
+            .attr("checked",f.selected ? true : null)
             .on("click",()=>{
-                this.checked = this.checked ? false : true;
-                f.selected = f.selected ? false : true;
+                this.checked = this.checked ? null : true;
+                filedetials[i].selected = filedetials[i].selected ? false : true;
                 theData();
+                onDataAdded();
             })
             ;
         tr.append('td').text(`-`)
             .on("click",()=>{
                 removeData(i);
+                onDataAdded();
             })
             ;
     })
@@ -466,20 +468,32 @@ function onDataAdded(data_in, filedatas, filedetials){
 
 
     d3.selectAll("#partitionSVG *").remove();
+    d3.selectAll("#tip-trend *").remove();
+    d3.selectAll("#js-heatmap *").remove();
+    d3.selectAll("#js-months *").remove();
+    d3.selectAll("#js-legend *").remove();
+    d3.selectAll("#slider-time *").remove();
+    d3.selectAll("#date-selecter *").remove();
+    d3.selectAll("#category-selecter *").remove();
+    d3.selectAll("#record-list *").remove();
+    d3.selectAll("#tooltip *").remove();
+
     drawCirc(toCircData(data));
     // 具体应该写更新视图之类的东西
-    
+
     processData(data);
     //updateCirc();
     drawSlider(START_YEAR, END_YEAR);
     drawCategorySelecter();
-    
+
     //drawCheckBox(CATEGORY);
     drawDateSelecter();
     drawStackChart(ALL_DATA[0].dates.slice(10, 30), [1, 2, 3, 4]);
 
     //console.log(data.dates);
     createHeatMap(ALL_DATA[CURR_YEAR - START_YEAR], CURR_YEAR, CURR_YEAR + 1);
+
+    selectAllCategory();
     //drawRecordList();
 }
 
