@@ -10,17 +10,21 @@ function drawStackChart(data, order) {
         .rangeRound([0, width])
         .domain(d3.extent(data, function (d) { return new Date(d.date); }));
     x.ticks(d3.timeDay.every(5));
-    console.log(x)
 
     //console.log(width)
     var y = d3.scaleLinear()
+        .domain([-1, 4])  
         .rangeRound([height, 0]);
 
     var xAxis = d3.axisBottom(x)
         .tickFormat(d3.timeFormat("%m-%d"))
 
     var yAxis = d3.axisLeft(y)
-        .tickFormat(d3.format(".2s"));
+        .tickValues([-1, 0, 1, 2, 3, 4])
+        .tickFormat((d) => {
+            var exp = Math.pow(10, d);
+            return `${exp}`;
+        });
 
     var svg = d3.select("#tip-trend").append("svg")
         .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
@@ -30,10 +34,7 @@ function drawStackChart(data, order) {
 
     var upBound = d3.max(data, function (d) { return d.count; })
     
-    y.domain([0, upBound]);
-    console.log("x domain", x.domain)
-    console.log(upBound)
-    console.log(data)
+    
     var xband = x(new Date(data[1].date)) - x(new Date(data[0].date));
     console.log(xband)
     svg.append("g")
@@ -51,18 +52,19 @@ function drawStackChart(data, order) {
         .style("text-anchor", "end")
         .text("Money");
     
-    //console.log(data);
-    console.log(order)
     data.forEach(function (d) {
         d.stacked = [];
-        y0 = 0;
+        y0 = -1;
         for(i = 0; i < CATEGORY.length; i++){
             index = order[i];
             
             stackInfo = {};
             stackInfo['y0'] = y0;
-            stackInfo['y1'] = y0 + d[CATEGORY[index]];
-            y0 += d[CATEGORY[index]];
+            
+            stackInfo['y1'] = Math.log10(Math.pow(10, y0) + d[CATEGORY[index]]);
+            
+            //console.log(y0, Math.pow(10, y0), d[CATEGORY[index]], stackInfo['y1']);
+            y0 = stackInfo['y1'];
             if (CURR_CLASS.indexOf(index) != -1)
                 stackInfo['color'] = 'rgb(136, 86, 167)';
             else
@@ -85,7 +87,9 @@ function drawStackChart(data, order) {
         .enter().append("rect")
         .attr("width", xband)
         .attr("y", function (d) { return y(d.y1); })
-        .attr("height", function (d) { return y(d.y0) - y(d.y1); })
+        .attr("height", function (d) {
+            //console.log(d.y0, d.y1, y(d.y0), y(d.y1));
+            return y(d.y0) - y(d.y1); })
         .style("fill", function (d) {
             return d.color 
         });
