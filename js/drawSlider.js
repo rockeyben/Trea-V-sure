@@ -1,5 +1,10 @@
 function drawSlider(start_year, end_year){
 
+    var width = 450,
+        height= 60,
+        margin= {top: 60, right: 60, bottom:60, left:60};
+
+
     var dataTime = d3.range(0, end_year-start_year).map(function (d) {
         return new Date(start_year + d, 10, 3);
     });
@@ -9,7 +14,7 @@ function drawSlider(start_year, end_year){
         .min(d3.min(dataTime))
         .max(d3.max(dataTime))
         .step(1000 * 60 * 60 * 24 * 365)
-        .width(300)
+        .width(width)
         .tickFormat(d3.timeFormat('%Y'))
         .tickValues(dataTime)
         .default(new Date(CURR_YEAR, 1, 1))
@@ -24,14 +29,17 @@ function drawSlider(start_year, end_year){
             }
         });
 
-    
+
     var gTime = d3
         .select('div#slider-time')
         .append('svg')
-        .attr('width', $('.slider').width)
-        .attr('height', $('.slider').height)
+        .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
+                    +(height + margin.top + margin.bottom).toString()+"")
+        // .attr('width', $('.slider').width)
+        // .attr('height', $('.slider').height)
         .append('g')
-        .attr('transform', 'translate(80,30)');
+        .attr('transform', `translate(${margin.left},${margin.top})`)
+        ;
 
     gTime.call(sliderTime);
 }

@@ -57,8 +57,8 @@ function createHeatMap(data, startYear, endYear) {
         .enter()
         .append('rect')
         .attr('class', gridClass)
-        .attr('width', CELL_SIZE)
-        .attr('height', CELL_SIZE)
+        .attr('width', CELL_SIZE-1)
+        .attr('height', CELL_SIZE-1)
         .attr('x', (d) => d3.timeFormat('%U')(new Date(d.date)) * CELL_SIZE)
         .attr('y', (d) => (new Date(d.date)).getDay() * CELL_SIZE)
         .attr('date', (d) => d.date)
@@ -96,6 +96,7 @@ function createHeatMap(data, startYear, endYear) {
             updateRecordList();
         })
         .on('mouseover', function (d) {
+            this.classList.add("hovered");
             var timeFormat = d3.timeFormat('%Y-%m-%d');
             //console.log(d.date)
             div.transition()
@@ -111,6 +112,7 @@ function createHeatMap(data, startYear, endYear) {
                 .style('top', (d3.event.pageY+10)+'px')
         })
         .on("mouseout", function (d) {
+            this.classList.remove("hovered");
             div.style("opacity", 0.0);
         }); 
 

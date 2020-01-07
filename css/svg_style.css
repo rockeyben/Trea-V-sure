@@ -10,7 +10,12 @@ svg {
 .day {
   fill: #eee;
   stroke: #fff;
-  stroke-width: 3px;
+  stroke-width: 1px;
+}
+
+
+.day.hovered {
+  stroke: #f66;
 }
 
 
@@ -136,13 +141,13 @@ svg {
 
 
 
-
+/*
 #date-selecter{
   display: block;
   margin-left: 5%;
   margin-top: 10px;
     width: 45%;
-}
+}*/
 
 
 
@@ -181,6 +186,6 @@ svg {
 
 
 
-#record-list #record-table{
+table{
   width: 100%;
 }
