@@ -2,7 +2,7 @@ function drawSlider(start_year, end_year){
 
     var width = 450,
         height= 60,
-        margin= {top: 60, right: 60, bottom:60, left:60};
+        margin= {top: 30, right: 60, bottom:30, left:60};
 
 
     var dataTime = d3.range(0, end_year-start_year).map(function (d) {

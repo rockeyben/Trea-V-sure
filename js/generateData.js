@@ -97,6 +97,8 @@ function  emptyData(year) {
 
 function processData(raw_data){
 
+    ALL_DATA = [];
+
     for (i = 0; i < raw_data.length; i++) {
         var date = raw_data[i].timeCreated;
         var year = date.getFullYear();

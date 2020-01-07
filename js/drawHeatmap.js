@@ -71,6 +71,8 @@ function createHeatMap(data, startYear, endYear) {
                     return `${gridClass} ${formatColor(Math.log10(d.count))}`
             })
         .on('click', function (d) {
+            rect.selectAll('.day').classed("clicked",false);
+            this.classList.add("clicked");
             //console.log(IS_SELECTING)
             if(IS_SELECTING == 1){
                 STACK_START_DATE = new Date(d.date);
