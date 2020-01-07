@@ -16,7 +16,6 @@ function drawRecordList(){
     var data = info['records'];
     d3.select("#record-list").append('p')
         .text(`以下是 ${d3.timeFormat('%Y-%m-%d')(CURR_DATE)} 的数据：`)
-        .attr('class', 'text-stack-year')
         .attr('id', 'date_text_3')
         ;
     d3.select("#record-list")
