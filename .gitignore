@@ -2,6 +2,8 @@ data.xlsx
 data_*.csv
 alipay_record_*.csv
 微信支付账单*.csv
+*/alipay_record_*.csv
+*/微信支付账单*.csv
 !.gitignore
 */.DS_Store
 */.DS_Store?
