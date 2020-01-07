@@ -15,7 +15,7 @@
         body{background: #eee;}
         .container.main{background: #fff;}
         .span-nav-desc{font-size: 0.6em;}
-        #fileInput{display: inline-block; background: #eee;}
+        /*#file-input{display: inline-block; background: #eee;}*/
     </style>
 </head>
 
@@ -28,7 +28,7 @@
         <a class="navbar-brand" href="#">Trea-V-sure</a>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
           <li class="nav-item" id="tab-datas">
-            <a class="nav-link" href="#">数据<span class="span-nav-desc"> (当前：样例.csv)</span></a>
+            <a class="nav-link" href="#">数据<span class="span-nav-desc"> (当前为样例数据)</span></a>
           </li>
           <li class="nav-item active" id="tab-views">
             <a class="nav-link" href="#">视图<span class="sr-only span-nav-desc"> (当前页面)</span></a>
@@ -48,6 +48,50 @@
         </form> -->
       </div>
     </nav>
+
+
+    <div class="container my-5 py-5 main hidden" id="main-datas">
+        <div class="row mt-5 mb-3"><div class="col"><h4>导入数据文件</h4></div></div>
+        <div class="row">
+            <div class="col">
+                <form name="file-form" class="container">
+                    <div class="form-group row" id="filePicker">
+                        <label for="file-input" class="col-sm-2 col-form-label">要导入的数据文件（csv格式）</label>
+                        <div class="col-sm-10">
+                            <input type="file" class="form-control" name="file-input" id="file-input" name="file" multiple="multiple" accept=".csv,.CSV" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="file-user" class="col-sm-2 col-form-label">这是谁的数据？</label>
+                        <div class="col-sm-10">
+                            <input type="test" class="form-control" name="file-user" id="file-user" placeholder="如：张三">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="file-charset" class="col-sm-2 col-form-label">文件的字符集是？</label>
+                        <div class="col-sm-10">
+                            <input type="test" class="form-control" name="file-charset" id="file-charset" placeholder="如：GBK（通常支付宝数据为GBK，微信为utf-8）">
+                        </div>
+                    </div>
+                    <button type="button" name="submit" id="submit" class="btn btn-primary">导入！</button>
+                </form>
+            </div>
+        </div>
+        <hr />
+        <div class="row mt-5 mb-3"><div class="col"><h4>文件概况</h4></div></div>
+        <div class="row">
+            <div class="col">
+                <div id="files-overview"></div>
+            </div>
+        </div>
+        <hr />
+        <div class="row mt-5 mb-3"><div class="col"><h4>数据总览</h4></div></div>
+        <div class="row">
+            <div class="col">
+                <div id="data-overview"></div>
+            </div>
+        </div>
+    </div>
 
 
     <div class="container my-5 py-5 main" id="main-views">
@@ -75,20 +119,6 @@
         <hr />
         <div class="row">
             <div class="col" id="record-list">
-            </div>
-        </div>
-    </div>
-
-
-    <div class="container my-5 py-5 main hidden" id="main-datas">
-        <div class="row">
-            <div class="col">
-                <div class="filePicker">
-                    <label>导入支付宝或微信文件</label>
-                    <input id="fileInput" type="file" name="file" multiple="multiple" accept=".csv,.CSV" />
-                    <input id="btn_add" type="button" name="btn_add" value="执行增加" />
-                    <input id="btn_update" type="button" name="btn_update" value="执行更改" />
-                </div>
             </div>
         </div>
     </div>
@@ -137,24 +167,8 @@
 
 
     <script type="text/javascript">
-        const fileInputElement = document.getElementById("fileInput");
-        fileInputElement.addEventListener("change", handleFiles, false);
-        function handleFiles() {
-            const fileList = this.files; /* now you can work with the file list */
-            var file = fileList[0];
-            if (file) {
-                // https://segmentfault.com/a/1190000006600936
-                // https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader
-                // https://www.cnblogs.com/FHC1994/p/12104170.html
-                var reader = new FileReader();
-                reader.readAsText(file,"GBK");
-                reader.onload = function(evt) {
-                    console.log(this.result);
-                };
-            }
-        }
-
-
+        document.getElementById("file-input").addEventListener("change", onChangeFile, false);
+        document.getElementById("submit").addEventListener("click", onSubmit, false);
 
 
         d3.select("#tab-datas").on('click',()=>{
@@ -175,6 +189,8 @@
             d3.selectAll(".main").classed("hidden", true);
             d3.select("#main-about").classed("hidden", false);
         })
+
+
     </script>
 
 
