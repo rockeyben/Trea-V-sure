@@ -38,7 +38,7 @@ function drawRecordList(){
     var data_array = [];
     
     info.records.forEach((d) => {
-        data_array.push([d.timePurchased, d.trader, d.goodName, d.dealType, d.dealCat, d.dealCatSub, d.value, d.user]);
+        data_array.push([d.time, d.trader, d.goodName, d.dealType, d.dealCat, d.dealCatSub, d.value, d.user]);
     });
 
     // var dimensions = { width: $('#record-list').width(), height: '700px' };
@@ -52,7 +52,7 @@ function drawRecordList(){
         } else if (d[3]=="支出") {
             tr.classed("tr-outcome", true);
         };
-        tr.append('td').text(`${d[0]}`);
+        tr.append('td').text(`${d3.timeFormat('%H:%M:%S')(d[0])}`);
         tr.append('td').text(`${d[1]}`);
         tr.append('td').text(`${d[2]}`);
         tr.append('td').text(`${d[3]}`);
