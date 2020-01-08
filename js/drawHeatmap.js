@@ -158,6 +158,24 @@ function createHeatMap(data, startYear, endYear) {
         .attr('x', (d) => d * CELL_SIZE + dx)
         .attr('class', (d) => `day color0-${d - 1}`);
 
+    var legend_x = d3.scaleLinear()
+        .domain([0, 7])
+        .rangeRound([0, CELL_SIZE*7]);
+    
+    var axis_text = ['角', '个', '十', '百', '千', '万'];
+    var tick_scales = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
+    var xAxis = d3.axisBottom(legend_x)
+        .tickValues(tick_scales)
+        .tickFormat((d, i) => {
+            var exp = axis_text[i];
+            return `${exp}`;
+        });
+    var viewBox = d3.select('#js-legend').selectAll('svg')
+    viewBox.append("g")
+        .attr("class", "x axis")
+        .attr("transform", `translate(${dx},${CELL_SIZE})`)
+        .call(xAxis)
+
 }
 
 function updateHeatmap(data, startYear, endYear) {
@@ -191,8 +209,4 @@ function updateHeatmap(data, startYear, endYear) {
             else
                 return `${gridClass} ${formatColor(Math.log10(d.count))}`
         })
-    var legendSvg = d3.select('#js-legend')
-        .selectAll('rect')
-        .data(() => d3.range(7))
-        .attr('class', (d) => `day color0-${d - 1}`);
 }
