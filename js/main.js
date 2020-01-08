@@ -2,6 +2,7 @@
 var CATEGORY = [];
 
 var NAME_DICT = {};
+var CATEGORY_INCOME = {};
 var CATEGORY_COLOR = [];
 var CURR_CLASS = [];
 var CELL_SIZE = 20;

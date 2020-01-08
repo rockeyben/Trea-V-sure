@@ -134,6 +134,15 @@ function processData(raw_data){
         var cat = record.dealCat;
         info[cat] += record.value;
         var cIndex = CATEGORY.indexOf(cat);
+        info['income'] = 0;
+        info['outcome'] = 0;
+        //console.log(record.dealType == "收入")
+        if(record.dealType == "收入"){
+            info['income'] += record.value;
+        }
+        else{
+            info['outcome'] += record.value;
+        }
         
         ALL_DATA[year - START_YEAR].maxCount[cIndex] = Math.max(ALL_DATA[year - START_YEAR].maxCount[cIndex], info[cat]); 
         
