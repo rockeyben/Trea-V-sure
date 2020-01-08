@@ -4,7 +4,7 @@
 
 svg {
   /*font: 10px sans-serif;*/
-  shape-rendering: crispEdges;
+  /*shape-rendering: crispEdges;*/
 }
 
 #record-list #record-table tbody tr {
