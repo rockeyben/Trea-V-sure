@@ -7,4 +7,4 @@ PKU DataVis 2019 Fall
 
 ## Current Version
 
-![image](https://github.com/rockeyben/Trea-V-sure/blob/master/assets/current_version_0104.png)
+![image](https://github.com/rockeyben/Trea-V-sure/blob/master/assets/current_version_0108.png)
