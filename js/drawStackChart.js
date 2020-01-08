@@ -11,18 +11,20 @@ function drawStackChart(data, order) {
         .domain(d3.extent(data, function (d) { return new Date(d.date); }));
     x.ticks(d3.timeDay.every(5));
 
-    //console.log(width)
     var y = d3.scaleLinear()
-        .domain([-1, 4])  
+        .domain([0, 8])  
         .rangeRound([height, 0]);
 
     var xAxis = d3.axisBottom(x)
         .tickFormat(d3.timeFormat("%m-%d"))
 
+    var axis_text = ['0.1', '1', '10', '100', '1000', '10000'];
+    var log_scales = [0.1, 1, 10, 100, 1000, 10000];
+    var tick_scales = [0.25, 0.5, 1, 3, 6, 8];
     var yAxis = d3.axisLeft(y)
-        .tickValues([-1, 0, 1, 2, 3, 4])
-        .tickFormat((d) => {
-            var exp = Math.pow(10, d);
+        .tickValues(tick_scales)
+        .tickFormat((d, i) => {
+            var exp = axis_text[i];
             return `${exp}`;
         });
 
@@ -54,24 +56,49 @@ function drawStackChart(data, order) {
     
     data.forEach(function (d) {
         d.stacked = [];
-        y0 = -1;
+        // selected class
+        y0 = 0;
+        stackInfo = {};
+        stackInfo['y0'] = y0;
+        var stackCnt1 = 0;
         for(i = 0; i < CATEGORY.length; i++){
-            index = order[i];
-            
-            stackInfo = {};
-            stackInfo['y0'] = y0;
-            
-            stackInfo['y1'] = Math.log10(Math.pow(10, y0) + d[CATEGORY[index]]);
-            
-            //console.log(y0, Math.pow(10, y0), d[CATEGORY[index]], stackInfo['y1']);
-            y0 = stackInfo['y1'];
-            if (CURR_CLASS.indexOf(index) != -1)
-                stackInfo['color'] = 'rgb(136, 86, 167)';
-            else
-                stackInfo['color'] = 'rgb(191, 211, 230)';
-            //console.log(stackInfo)
-            d.stacked.push(stackInfo);
+            if (CURR_CLASS.indexOf(i) != -1){
+                stackCnt1 += d[CATEGORY[i]];
+            }
         }
+        var logNum = (Math.log10(stackCnt1) - (-1));
+        if (logNum <= 2)
+            stackInfo['y1'] = Math.pow(2, logNum)*0.25;
+        else if(logNum < 5){
+            var logInt = Math.floor(logNum);
+            stackInfo['y1'] = tick_scales[logInt] + (stackCnt1 - log_scales[logInt]) / (log_scales[logInt+1] - log_scales[logInt]);
+        }else{
+            stackInfo['y1'] = tick_scales[tick_scales.length-1]
+        }
+        y0 += stackInfo['y1'];
+        stackInfo['color'] = 'rgb(136, 86, 167)';
+        d.stacked.push(stackInfo);
+
+        // unselected class
+        stackInfo = {};
+        stackInfo['y0'] = y0;
+        for (i = 0; i < CATEGORY.length; i++) {
+            if (CURR_CLASS.indexOf(i) == -1) {
+                stackCnt1 += d[CATEGORY[i]];
+            }
+        }
+        logNum = (Math.log10(stackCnt1) - (-1));
+        if (logNum <= 2)
+            stackInfo['y1'] = Math.pow(2, logNum) * 0.25;
+        else if (logNum < 5) {
+            var logInt = Math.floor(logNum);
+            stackInfo['y1'] = tick_scales[logInt] + (stackCnt1 - log_scales[logInt]) / (log_scales[logInt + 1] - log_scales[logInt]);
+        } else {
+            stackInfo['y1'] = tick_scales[tick_scales.length - 1]
+        }        
+
+        stackInfo['color'] = 'rgb(191, 211, 230)';
+        d.stacked.push(stackInfo);
     })
 
     var day = svg.selectAll(".stack_day")
