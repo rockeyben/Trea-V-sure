@@ -97,14 +97,22 @@
     <div class="container my-5 py-5 main" id="main-views">
         <div class="row">
             <div class="col-md-7 col-sm-12" id="wrap-stark">
+                <h4>净支出（元）</h4>
+                <p>当前年度所选时间范围每日净支出。</p>
                 <div id="tip-trend"></div>
             </div>
             <div class="col-md-5 col-sm-12" id="wrap-circ">
+                <h4>分类占比</h4>
+                <p>所选时间范围内各类收支所占比例。</p>
                 <div class="circle-tree-graph"><svg id="partitionSVG" viewBox="0 0 932 932"></svg></div>
             </div>
         </div>
-        <hr />
+        <hr class="mb-5" />
         <div class="row" id="wrap-heatmap">
+            <div class="col-12">
+                <h4>年度热力图</h4>
+                <p>当前年度每日收支热力图。红色：支出>收入；绿色：收入>支出。</p>
+            </div>
             <div class="col-12" id='wrap-heatmap-themap'>
                 <div id="results">
                     <div id="js-heatmap"></div>
@@ -112,13 +120,22 @@
                     <div id="js-legend"></div>
                 </div>
             </div>
+        </div>
+        <hr class="mb-5" />
+        <div class="row" id="wrap-ctrls">
+            <div class="col-12">
+                <h4>筛选器</h4>
+            </div>
             <div class="col-md-6 col-sm-12" id='slider-time'></div>
             <div class="col-md-6 col-sm-12" id='date-selecter'></div>
             <div class="col-12" id='category-selecter'></div>
         </div>
-        <hr />
+        <hr class="mb-5" />
         <div class="row">
-            <div class="col" id="record-list">
+            <div class="col-12">
+                <h4>日账单</h4>
+            </div>
+            <div class="col-12" id="record-list">
             </div>
         </div>
     </div>
