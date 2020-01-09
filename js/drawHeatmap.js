@@ -89,10 +89,29 @@ function createHeatMap(data, startYear, endYear) {
             rect.selectAll('.day').classed("clicked",false);
             this.classList.add("clicked");
             //console.log(IS_SELECTING)
-            if(IS_SELECTING == 1){
+
+
+            if (IS_SELECTING == 0){
+                IS_SELECTING = 1;
+                d3.select('#date-selecter-btn')
+                    .text('请在图中点击');
+                d3.select('#date_text_1')
+                    .text('开始：[请在图中点击开始日期]；');
+                d3.select('#date_text_2')
+                    .text('结束：[待稍后选择]。');
+
                 STACK_START_DATE = new Date(d.date);
                 IS_SELECTING += 1;
                 updateDateText1();
+                d3.selectAll('.day').classed("selected-1", false)
+                d3.select(this).classed("selected-1", true)
+            }
+            else if(IS_SELECTING == 1){
+                STACK_START_DATE = new Date(d.date);
+                IS_SELECTING += 1;
+                updateDateText1();
+                d3.selectAll('.day').classed("selected-1", false)
+                d3.select(this).classed("selected-1", true)
             }
             else if(IS_SELECTING == 2){
                 STACK_END_DATE = new Date(d.date);

@@ -42,7 +42,12 @@ svg {
   stroke: #f66;
 }
 .day.clicked {
-  stroke: #f00;
+  stroke: #f60;
+  stroke-width: 2px;
+}
+
+.day.selected-1 {
+  stroke: #00f;
   stroke-width: 2px;
 }
 
