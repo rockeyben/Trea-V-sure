@@ -395,7 +395,7 @@ function updateCirc() {
     var s_i = date2index(STACK_START_DATE);
     var e_i = date2index(STACK_END_DATE);
 
-    var selected_range = ALL_DATA[CURR_YEAR - START_YEAR].dates.slice(s_i, e_i);
+    var selected_range = ALL_DATA[CURR_YEAR - START_YEAR].dates.slice(s_i, e_i+1);
     var json_format = [];
     selected_range.forEach((d) => {
         //console.log(d)

@@ -108,6 +108,9 @@ function createHeatMap(data, startYear, endYear) {
                 updateCirc();
                 IS_SELECTING = 0;
             }
+            // else {
+            //     console.log(date2index(new Date(d.date)))
+            // }
 
             CURR_DATE = new Date(d.date);
             updateRecordList();

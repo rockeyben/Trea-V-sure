@@ -112,12 +112,12 @@ function processData(raw_data){
     CURR_YEAR = START_YEAR;
 
     STACK_START_DATE = new Date(CURR_YEAR, 0, 1);
-    STACK_END_DATE = new Date(CURR_YEAR, 11, 30);
+    STACK_END_DATE = new Date(CURR_YEAR, 11, 31);//11其实表示12月，12月有31天。
     CURR_DATE = new Date(CURR_YEAR, 0, 1);
-    console.log(START_YEAR, END_YEAR);
-    for (i = START_YEAR; i <= END_YEAR; i++){
-        console.log(i)
-        ALL_DATA.push(emptyData(i));
+    // console.log(START_YEAR, END_YEAR);
+    for (j = START_YEAR; j <= END_YEAR; j++){
+        // console.log(j)
+        ALL_DATA.push(emptyData(j));
     }
 
 

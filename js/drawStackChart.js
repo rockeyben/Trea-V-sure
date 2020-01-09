@@ -5,17 +5,22 @@ function drawStackChart(data, order) {
     var margin = { top: 20, right: 20, bottom: 40, left: 40 },
         width = 700,
         height = 500;
+
     //console.log(data[0].date, data[data.length - 1].date)
-    var x = d3.scaleTime()
+
+    let extd = d3.extent(data, function (d) { return new Date(d.date); })
+    extd[1].setDate(extd[1].getDate()+1)
+
+    var xX = d3.scaleTime()
         .rangeRound([0, width])
-        .domain(d3.extent(data, function (d) { return new Date(d.date); }));
-    x.ticks(d3.timeDay.every(5));
+        .domain(extd);
+    xX.ticks(d3.timeDay.every(5));
 
     var y = d3.scaleLinear()
         .domain([0, 8])  
         .rangeRound([height, 0]);
 
-    var xAxis = d3.axisBottom(x)
+    var xAxis = d3.axisBottom(xX)
         .tickFormat(d3.timeFormat("%m-%d"))
 
     var axis_text = ['0.1', '1', '10', '100', '1000', '10000'];
@@ -37,8 +42,17 @@ function drawStackChart(data, order) {
     var upBound = d3.max(data, function (d) { return d.count; })
     
     
-    var xband = x(new Date(data[1].date)) - x(new Date(data[0].date));
-    console.log(xband)
+    console.log(data)
+    console.log("xband start");
+    var date_debug_1 = new Date(data[1].date);
+    // date_debug_1.setDate(date_debug_1.getDate()+1);
+    var date_debug_0 = new Date(data[0].date);
+    console.log(date_debug_0);
+    console.log(date_debug_1);
+    var xband = xX(date_debug_1) - xX(date_debug_0);
+    // console.log(xband);
+    console.log("xband end");
+
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -106,8 +120,8 @@ function drawStackChart(data, order) {
         .enter().append("g")
         .attr("class", "g")
         .attr("transform", function (d, i) { 
-            //console.log(x(new Date(d.date)), d.date)
-            return "translate(" + x(new Date(d.date)) + ",0)"; });
+            //console.log(xX(new Date(d.date)), d.date)
+            return "translate(" + xX(new Date(d.date)) + ",0)"; });
 
     day.selectAll("rect")
         .data(function (d) { return d.stacked; })
@@ -142,5 +156,5 @@ function updateStackChart() {
             order.push(i);
     }
     //console.log(order)
-    drawStackChart(ALL_DATA[CURR_YEAR-START_YEAR].dates.slice(s_i, e_i), order);
+    drawStackChart(ALL_DATA[CURR_YEAR-START_YEAR].dates.slice(s_i, e_i+1), order);
 }
