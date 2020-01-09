@@ -142,7 +142,7 @@ function createHeatMap(data, startYear, endYear) {
         .enter()
         .append('svg')
         .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
-                    +(40 + margin.top + margin.bottom).toString()+"")
+                    +(40).toString()+"")
         .append('g')
         .attr('transform', 'translate(0,20)')
         .selectAll('.month')
@@ -151,45 +151,10 @@ function createHeatMap(data, startYear, endYear) {
         .append('text')
         .attr('x', (d) => d * (4.5 * CELL_SIZE) + dx)
         .attr('class', 'text-month')
-        .text((d) => d3.timeFormat('%b')(new Date(0, d + 1, 0)));
+        .text((d) => `${d3.timeFormat('%m')(new Date(0, d + 1, 0))}月`);
 
     // Render the grid color legend.
-    var legendSvg = d3.select('#js-legend').selectAll('svg.legend')
-        .enter()
-        .append('svg')
-        .data([1])
-        .enter()
-        .append('svg')
-        .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
-                    +(20 + margin.top + margin.bottom).toString()+"")
-        .append('g')
-        .attr('transform', 'translate(0,0)')
-        .selectAll('.legend-grid')
-        .data(() => d3.range(7))
-        .enter()
-        .append('rect')
-        .attr('width', CELL_SIZE)
-        .attr('height', CELL_SIZE)
-        .attr('x', (d) => d * CELL_SIZE + dx)
-        .attr('class', (d) => `day color0-${d - 1}`);
 
-    var legend_x = d3.scaleLinear()
-        .domain([0, 7])
-        .rangeRound([0, CELL_SIZE*7]);
-    
-    var axis_text = ['角', '个', '十', '百', '千', '万'];
-    var tick_scales = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
-    var xAxis = d3.axisBottom(legend_x)
-        .tickValues(tick_scales)
-        .tickFormat((d, i) => {
-            var exp = axis_text[i];
-            return `${exp}`;
-        });
-    var viewBox = d3.select('#js-legend').selectAll('svg')
-    viewBox.append("g")
-        .attr("class", "x axis")
-        .attr("transform", `translate(${dx},${CELL_SIZE})`)
-        .call(xAxis)
 
     var legendSvg = d3.select('#js-legend').selectAll('svg.legend')
         .enter()
@@ -200,33 +165,109 @@ function createHeatMap(data, startYear, endYear) {
         .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
                     +(20 + margin.top + margin.bottom).toString()+"")
         .append('g')
-        .attr('transform', 'translate(0,0)')
+        .attr('transform', `translate(${(width + margin.left + margin.right)/2-7*CELL_SIZE},${0})`)
         .selectAll('.legend-grid')
-        .data(() => d3.range(7))
+        .data(() => d3.range(14))
         .enter()
         .append('rect')
         .attr('width', CELL_SIZE)
         .attr('height', CELL_SIZE)
-        .attr('x', (d) => d * CELL_SIZE + dx)
-        .attr('class', (d) => `day color1-${d - 1}`);
+        .attr('x', (d) => d * CELL_SIZE)
+        .attr('class', (d) => `day color${Math.floor(d/7)}-${(d<7)?(5-d):(d%7 - 1)}`);
 
     var legend_x = d3.scaleLinear()
-        .domain([0, 7])
-        .rangeRound([0, CELL_SIZE*7]);
-    
-    var axis_text = ['角', '个', '十', '百', '千', '万'];
-    var tick_scales = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
+        .domain([-7, 7])
+        .rangeRound([0, CELL_SIZE*14]);
+
+    var axis_text = ['万', '千', '百', '十', '个', '角', '角', '个', '十', '百', '千', '万'];
+    var tick_scales = [-6.5, -5.5, -4.5, -3.5, -2.5, -1.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
     var xAxis = d3.axisBottom(legend_x)
         .tickValues(tick_scales)
         .tickFormat((d, i) => {
             var exp = axis_text[i];
             return `${exp}`;
         });
+
     var viewBox = d3.select('#js-legend').selectAll('svg')
     viewBox.append("g")
         .attr("class", "x axis")
-        .attr("transform", `translate(${dx},${CELL_SIZE})`)
+        .attr("transform", `translate(${(width + margin.left + margin.right)/2-7*CELL_SIZE},${CELL_SIZE})`)
         .call(xAxis)
+
+
+    // var legendSvg = d3.select('#js-legend').selectAll('svg.legend')
+    //     .enter()
+    //     .append('svg')
+    //     .data([1])
+    //     .enter()
+    //     .append('svg')
+    //     .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
+    //                 +(20 + margin.top + margin.bottom).toString()+"")
+    //     .append('g')
+    //     .attr('transform', 'translate(0,0)')
+    //     .selectAll('.legend-grid')
+    //     .data(() => d3.range(7))
+    //     .enter()
+    //     .append('rect')
+    //     .attr('width', CELL_SIZE)
+    //     .attr('height', CELL_SIZE)
+    //     .attr('x', (d) => d * CELL_SIZE + dx)
+    //     .attr('class', (d) => `day color0-${d - 1}`);
+
+    // var legend_x = d3.scaleLinear()
+    //     .domain([0, 7])
+    //     .rangeRound([0, CELL_SIZE*7]);
+    
+    // var axis_text = ['角', '个', '十', '百', '千', '万'];
+    // var tick_scales = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
+    // var xAxis = d3.axisBottom(legend_x)
+    //     .tickValues(tick_scales)
+    //     .tickFormat((d, i) => {
+    //         var exp = axis_text[i];
+    //         return `${exp}`;
+    //     });
+    // var viewBox = d3.select('#js-legend').selectAll('svg')
+    // viewBox.append("g")
+    //     .attr("class", "x axis")
+    //     .attr("transform", `translate(${dx},${CELL_SIZE})`)
+    //     .call(xAxis)
+
+    // var legendSvg = d3.select('#js-legend').selectAll('svg.legend')
+    //     .enter()
+    //     .append('svg')
+    //     .data([1])
+    //     .enter()
+    //     .append('svg')
+    //     .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
+    //                 +(20 + margin.top + margin.bottom).toString()+"")
+    //     .append('g')
+    //     .attr('transform', 'translate(0,0)')
+    //     .selectAll('.legend-grid')
+    //     .data(() => d3.range(7))
+    //     .enter()
+    //     .append('rect')
+    //     .attr('width', CELL_SIZE)
+    //     .attr('height', CELL_SIZE)
+    //     .attr('x', (d) => d * CELL_SIZE + dx)
+    //     .attr('class', (d) => `day color1-${d - 1}`);
+
+    // var legend_x = d3.scaleLinear()
+    //     .domain([0, 7])
+    //     .rangeRound([0, CELL_SIZE*7]);
+    
+    // var axis_text = ['角', '个', '十', '百', '千', '万'];
+    // var tick_scales = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
+    // var xAxis = d3.axisBottom(legend_x)
+    //     .tickValues(tick_scales)
+    //     .tickFormat((d, i) => {
+    //         var exp = axis_text[i];
+    //         return `${exp}`;
+    //     });
+    // var viewBox = d3.select('#js-legend').selectAll('svg')
+    // viewBox.append("g")
+    //     .attr("class", "x axis")
+    //     .attr("transform", `translate(${dx},${CELL_SIZE})`)
+    //     .call(xAxis)
 
 }
 
