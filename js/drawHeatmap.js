@@ -229,7 +229,7 @@ function updateHeatmap(data, startYear, endYear) {
         .range(d3.range(NUMBER_OF_COLORS)
             .map((d) => `color1-${d}`));
 
-    grid = d3.selectAll('.day').data(dates);
+    grid = d3.selectAll('#js-heatmap .day').data(dates);
     grid.exit().remove();
     grid = grid.enter()
             .append('rect')
