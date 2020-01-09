@@ -194,81 +194,6 @@ function createHeatMap(data, startYear, endYear) {
         .attr("transform", `translate(${(width + margin.left + margin.right)/2-7*CELL_SIZE},${CELL_SIZE})`)
         .call(xAxis)
 
-
-    // var legendSvg = d3.select('#js-legend').selectAll('svg.legend')
-    //     .enter()
-    //     .append('svg')
-    //     .data([1])
-    //     .enter()
-    //     .append('svg')
-    //     .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
-    //                 +(20 + margin.top + margin.bottom).toString()+"")
-    //     .append('g')
-    //     .attr('transform', 'translate(0,0)')
-    //     .selectAll('.legend-grid')
-    //     .data(() => d3.range(7))
-    //     .enter()
-    //     .append('rect')
-    //     .attr('width', CELL_SIZE)
-    //     .attr('height', CELL_SIZE)
-    //     .attr('x', (d) => d * CELL_SIZE + dx)
-    //     .attr('class', (d) => `day color0-${d - 1}`);
-
-    // var legend_x = d3.scaleLinear()
-    //     .domain([0, 7])
-    //     .rangeRound([0, CELL_SIZE*7]);
-    
-    // var axis_text = ['角', '个', '十', '百', '千', '万'];
-    // var tick_scales = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
-    // var xAxis = d3.axisBottom(legend_x)
-    //     .tickValues(tick_scales)
-    //     .tickFormat((d, i) => {
-    //         var exp = axis_text[i];
-    //         return `${exp}`;
-    //     });
-    // var viewBox = d3.select('#js-legend').selectAll('svg')
-    // viewBox.append("g")
-    //     .attr("class", "x axis")
-    //     .attr("transform", `translate(${dx},${CELL_SIZE})`)
-    //     .call(xAxis)
-
-    // var legendSvg = d3.select('#js-legend').selectAll('svg.legend')
-    //     .enter()
-    //     .append('svg')
-    //     .data([1])
-    //     .enter()
-    //     .append('svg')
-    //     .attr("viewBox", "0,0,"+(width + margin.left + margin.right).toString()+","
-    //                 +(20 + margin.top + margin.bottom).toString()+"")
-    //     .append('g')
-    //     .attr('transform', 'translate(0,0)')
-    //     .selectAll('.legend-grid')
-    //     .data(() => d3.range(7))
-    //     .enter()
-    //     .append('rect')
-    //     .attr('width', CELL_SIZE)
-    //     .attr('height', CELL_SIZE)
-    //     .attr('x', (d) => d * CELL_SIZE + dx)
-    //     .attr('class', (d) => `day color1-${d - 1}`);
-
-    // var legend_x = d3.scaleLinear()
-    //     .domain([0, 7])
-    //     .rangeRound([0, CELL_SIZE*7]);
-    
-    // var axis_text = ['角', '个', '十', '百', '千', '万'];
-    // var tick_scales = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
-    // var xAxis = d3.axisBottom(legend_x)
-    //     .tickValues(tick_scales)
-    //     .tickFormat((d, i) => {
-    //         var exp = axis_text[i];
-    //         return `${exp}`;
-    //     });
-    // var viewBox = d3.select('#js-legend').selectAll('svg')
-    // viewBox.append("g")
-    //     .attr("class", "x axis")
-    //     .attr("transform", `translate(${dx},${CELL_SIZE})`)
-    //     .call(xAxis)
-
 }
 
 function updateHeatmap(data, startYear, endYear) {
@@ -304,20 +229,28 @@ function updateHeatmap(data, startYear, endYear) {
         .range(d3.range(NUMBER_OF_COLORS)
             .map((d) => `color1-${d}`));
 
-    grid = d3.selectAll('.day').data(dates)
-        .attr('x', (d) => d3.timeFormat('%U')(new Date(d.date)) * CELL_SIZE)
-        .attr('y', (d) => (new Date(d.date)).getDay() * CELL_SIZE)
-        .attr('class', function (d) {
-            console.log(d.count)
-            if (upBound == 0 || d.count == 0)
-                return `${gridClass} #eee`
-            else if (d.count > 0)
-                return `${gridClass} ${formatColor(Math.log10(d.count))}`
-            else if (d.count < 0){
-                console.log(d.count);
-                console.log(formatColorOutcome(Math.log10(-d.count)));
-                return `${gridClass} ${formatColorOutcome(Math.log10(-d.count))}`
-            }
-                
-        })
+    grid = d3.selectAll('.day').data(dates);
+    grid.exit().remove();
+    grid = grid.enter()
+            .append('rect')
+            .attr('width', CELL_SIZE)
+            .attr('height', CELL_SIZE)
+        .merge(grid)
+            .attr('x', (d) => d3.timeFormat('%U')(new Date(d.date)) * CELL_SIZE)
+            .attr('y', (d) => (new Date(d.date)).getDay() * CELL_SIZE)
+            .attr('class', function (d) {
+                // console.log(d.count)
+                if (upBound == 0 || d.count == 0)
+                    return `${gridClass} #eee`
+                else if (d.count > 0)
+                    return `${gridClass} ${formatColor(Math.log10(d.count))}`
+                else if (d.count < 0){
+                    // console.log(d.count);
+                    // console.log(formatColorOutcome(Math.log10(-d.count)));
+                    return `${gridClass} ${formatColorOutcome(Math.log10(-d.count))}`
+                }
+            })
+            ;
 }
+
+
