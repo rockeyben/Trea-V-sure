@@ -21,6 +21,7 @@ svg {
 
 #data-overview, #files-overview, #record-list {
   overflow: auto;
+  max-height: 90vh;
 }
 
 #date-selecter{

@@ -13,15 +13,18 @@ function drawStackChart(data, order) {
 
     var xX = d3.scaleTime()
         .rangeRound([0, width])
-        .domain(extd);
-    xX.ticks(d3.timeDay.every(5));
+        .domain(extd)
+        ;
+    // xX.ticks(2);
+    xX.ticks(d3.timeDay.every(1));
 
     var y = d3.scaleLinear()
         .domain([0, 8])  
         .rangeRound([height, 0]);
 
     var xAxis = d3.axisBottom(xX)
-        .tickFormat(d3.timeFormat("%m-%d"))
+        // .tickFormat(d3.timeFormat("%m-%d"))
+        ;
 
     var axis_text = ['0.1', '1', '10', '100', '1000', '10000'];
     var log_scales = [0.1, 1, 10, 100, 1000, 10000];
@@ -42,16 +45,16 @@ function drawStackChart(data, order) {
     var upBound = d3.max(data, function (d) { return d.count; })
     
     
-    console.log(data)
-    console.log("xband start");
+    // console.log(data);
+    // console.log("xband start");
     var date_debug_1 = new Date(data[1].date);
     // date_debug_1.setDate(date_debug_1.getDate()+1);
     var date_debug_0 = new Date(data[0].date);
-    console.log(date_debug_0);
-    console.log(date_debug_1);
+    // console.log(date_debug_0);
+    // console.log(date_debug_1);
     var xband = xX(date_debug_1) - xX(date_debug_0);
     // console.log(xband);
-    console.log("xband end");
+    // console.log("xband end");
 
     svg.append("g")
         .attr("class", "x axis")

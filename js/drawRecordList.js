@@ -32,13 +32,15 @@ function drawRecordList(){
     thead_tr.append('th').text(`子类`);
     thead_tr.append('th').text(`金额`);
     thead_tr.append('th').text(`用户`);
+    thead_tr.append('th').text(`是否涉及退款`);
+    thead_tr.append('th').text(`退款损失金额`);
 
     d3.select("#record-list > #record-table").append("tbody");
 
     var data_array = [];
     
     info.records.forEach((d) => {
-        data_array.push([d.time, d.trader, d.goodName, d.dealType, d.dealCat, d.dealCatSub, d.value, d.user]);
+        data_array.push([d.time, d.trader, d.goodName, d.dealType, d.dealCat, d.dealCatSub, d.value, d.user, d.aboutRefund, d.valueLost]);
     });
 
     // var dimensions = { width: $('#record-list').width(), height: '700px' };
@@ -60,6 +62,8 @@ function drawRecordList(){
         tr.append('td').text(`${d[5]}`);
         tr.append('td').text(`${d[6]}`);
         tr.append('td').text(`${d[7]}`);
+        tr.append('td').text(`${d[8]}`);
+        tr.append('td').text(`${d[9]}`);
     })
 
     var sort_direction=1;

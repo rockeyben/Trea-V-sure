@@ -394,6 +394,8 @@ function printData(data){
     thead_tr.append('th').text(`子类`);
     thead_tr.append('th').text(`金额`);
     thead_tr.append('th').text(`用户`);
+    thead_tr.append('th').text(`是否涉及退款`);
+    thead_tr.append('th').text(`退款损失金额`);
 
     d3.select("#data-overview > #data-overview-table").append("tbody");
 
@@ -410,6 +412,8 @@ function printData(data){
         tr.append('td').text(`${d.dealCatSub}`);
         tr.append('td').text(`${d.value}`);
         tr.append('td').text(`${d.user}`);
+        tr.append('td').text(`${d.aboutRefund}`);
+        tr.append('td').text(`${d.valueLost}`);
     })
 }
 
