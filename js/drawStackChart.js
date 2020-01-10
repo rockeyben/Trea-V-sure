@@ -8,8 +8,8 @@ function drawStackChart(data, order) {
 
     //console.log(data[0].date, data[data.length - 1].date)
 
-    let extd = d3.extent(data, function (d) { return new Date(d.date); })
-    extd[1].setDate(extd[1].getDate()+1)
+    let extd = d3.extent(data, function (d) { return new Date(d.date); });
+    extd[1].setDate(extd[1].getDate()+1);
 
     var xX = d3.scaleTime()
         .rangeRound([0, width])
